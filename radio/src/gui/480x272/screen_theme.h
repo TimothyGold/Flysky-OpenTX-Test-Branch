@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,10 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _SCREEN_THEME_H_
-#define _SCREEN_THEME_H_
-
 #include "tabsgroup.h"
 #include "libwindows.h"
 #include "opentx.h"
@@ -43,5 +40,3 @@ class ScreenThemePage: public ZoneOptionPage {
   protected:
     void onZoneOptionChanged(const ZoneOption* option) override;
 };
-
-#endif //_SCREEN_THEME_H_
