@@ -149,6 +149,7 @@ class LogicalSwitchEditWindow: public Page {
                            getMixSrcRange(cs->v1, min, max, &flags);
                            v2Edit->setMin(min);
                            v2Edit->setMax(max);
+						   v2Edit->setLcdFlags(flags);
                            v2Edit->invalidate();
                          });
         grid.nextLine();
