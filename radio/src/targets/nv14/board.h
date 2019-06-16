@@ -397,8 +397,9 @@ extern uint16_t adcValues[NUM_ANALOGS];
 void adcInit(void);
 void adcRead(void);
 uint16_t getAnalogValue(uint8_t index);
-uint16_t getBatteryVoltage();   // returns current battery voltage in 10mV steps
-// uint16_t getBattery2Voltage();  // returns current battery voltage in 10mV steps
+uint16_t getBatteryVoltage();  // returns current battery voltage in 10mV steps
+// uint16_t getBattery2Voltage();  // returns current battery voltage in 10mV
+// steps
 
 #define BATTERY_WARN 37  // 3.7V
 #define BATTERY_MIN 36   // 3.6V
@@ -539,10 +540,6 @@ void telemetryPortSetDirectionOutput(void);
 void sportSendBuffer(uint8_t* buffer, uint32_t count);
 uint8_t telemetryGetByte(uint8_t* byte);
 extern uint32_t telemetryErrors;
-
-#if defined(INTERNAL_MULTIMODULE)
-uint8_t intTelemetrGetByte(uint8_t* byte);
-#endif
 
 // Sport update driver
 void sportUpdatePowerOn(void);
