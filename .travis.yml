@@ -50,11 +50,13 @@ before_install:
   - if [ "$QT_BASE" = "56" ]; then sudo add-apt-repository ppa:beineri/opt-qt562-trusty -y; fi
   - if [ "$QT_BASE" = "57" ]; then sudo add-apt-repository ppa:beineri/opt-qt571-trusty -y; fi
   - sudo apt-get update -qq
+  # - sudo apt-get install add-apt-key
+  # - sudo add-apt-key B05F25D762E3157
   - pyenv uninstall -f 2.7.6 && pyenv install 3.5.4 && pyenv global 3.5.4
   - pip install pillow
 
 install:
-  - sudo apt-get --yes --force-yes install curl libmpfr4 libmpc3 libfox-1.6-dev libgtest-dev build-essential cmake gcc git lib32ncurses5 lib32z1 libfox-1.6-dev libsdl1.2-dev qt5-default qtmultimedia5-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev software-properties-common wget zip python-pip python-pil libgtest-dev
+  - sudo apt-get --yes --force-yes install add-apt-key curl libmpfr4 libmpc3 libfox-1.6-dev libgtest-dev build-essential cmake gcc git lib32ncurses5 lib32z1 libfox-1.6-dev libsdl1.2-dev qt5-default qtmultimedia5-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev software-properties-common wget zip python-pip python-pil libgtest-dev
   - |
     if [[ " ${AVR_FLAVORS} " =~ " ${FLAVOR} " || ${FLAVOR} == "ALL" ]]; then
       wget --quiet https://launchpad.net/ubuntu/+source/gcc-avr/1:4.9.2+Atmel3.5.0-1/+build/8403710/+files/gcc-avr_4.9.2+Atmel3.5.0-1_amd64.deb
