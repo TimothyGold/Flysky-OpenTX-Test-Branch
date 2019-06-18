@@ -90,7 +90,7 @@ Window * ZoneOptionPage::createOptionEdit(Window * parent, const rect_t &rect, c
           onZoneOptionChanged(option);
         });
     timerchoice->setTextHandler([](int32_t value) {
-      return std::string(STR_TIMER) + std::to_string(value + 1);
+      return std::string(STR_TIMER) + to_string(value + 1);
     });
     return timerchoice;
   }
