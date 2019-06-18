@@ -1,5 +1,5 @@
 sudo: required
-dist: disco
+dist: trusty
 language: cpp
 compiler: gcc
 
@@ -42,13 +42,13 @@ env:
 
 before_install:
   - sudo add-apt-repository ppa:ubuntu-sdk-team/ppa --yes
-  # - sudo add-apt-repository ppa:terry.guo/gcc-arm-embedded --yes
-  # - sudo add-apt-repository ppa:ubuntu-toolchain-r/test --yes
-  # - if [ "$QT_BASE" = "53" ]; then sudo add-apt-repository ppa:beineri/opt-qt532-trusty -y; fi
-  # - if [ "$QT_BASE" = "54" ]; then sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y; fi
-  # - if [ "$QT_BASE" = "55" ]; then sudo add-apt-repository ppa:beineri/opt-qt551-trusty -y; fi
-  # - if [ "$QT_BASE" = "56" ]; then sudo add-apt-repository ppa:beineri/opt-qt562-trusty -y; fi
-  # - if [ "$QT_BASE" = "57" ]; then sudo add-apt-repository ppa:beineri/opt-qt571-trusty -y; fi
+  - sudo add-apt-repository ppa:terry.guo/gcc-arm-embedded --yes
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test --yes
+  - if [ "$QT_BASE" = "53" ]; then sudo add-apt-repository ppa:beineri/opt-qt532-trusty -y; fi
+  - if [ "$QT_BASE" = "54" ]; then sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y; fi
+  - if [ "$QT_BASE" = "55" ]; then sudo add-apt-repository ppa:beineri/opt-qt551-trusty -y; fi
+  - if [ "$QT_BASE" = "56" ]; then sudo add-apt-repository ppa:beineri/opt-qt562-trusty -y; fi
+  - if [ "$QT_BASE" = "57" ]; then sudo add-apt-repository ppa:beineri/opt-qt571-trusty -y; fi
   - sudo apt-get update -qq
   - pyenv uninstall -f 2.7.6 && pyenv install 3.5.4 && pyenv global 3.5.4
   - pip install pillow
@@ -69,7 +69,7 @@ install:
       # - tar xjf gcc-arm-none-eabi-4_7-2013q3-20130916-linux.tar.bz2
       # - mv gcc-arm-none-eabi-4_7-2013q3 /opt/gcc-arm-none-eabi
     fi
-  # - sudo apt-get install --yes --force-yes -qq qt${QT_BASE}base qt${QT_BASE}multimedia qt${QT_BASE}svg qt${QT_BASE}tools; source /opt/qt${QT_BASE}/bin/qt${QT_BASE}-env.sh
+  - sudo apt-get install --yes --force-yes -qq qt${QT_BASE}base qt${QT_BASE}multimedia qt${QT_BASE}svg qt${QT_BASE}tools; source /opt/qt${QT_BASE}/bin/qt${QT_BASE}-env.sh
 
 script:
-  - ./tools/commit-tests.sh
+  - ./tools/commit-tests.sh -Wno-error

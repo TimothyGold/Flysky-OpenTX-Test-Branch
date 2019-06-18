@@ -7,7 +7,7 @@ set -x
 # Allow variable core usage, default uses two cores, to set 8 cores for example : commit-tests.sh -j8
 : ${CORES:=2}
 # Default build treats warnings as errors, set -Wno-error to override, e.g.: commit-tests.sh -Wno-error
-: ${WERROR:=0}
+: ${WERROR:=1}
 # A board name to build for, or ALL
 : ${FLAVOR:=NV14}
 
@@ -187,10 +187,10 @@ fi
 if [[ " NV14 ALL " =~ " ${FLAVOR} " ]] ; then
   # Nirvana TX
   rm -rf *
-  cmake ${COMMON_OPTIONS} -DPCB=NV14 -DHELI=NO -DLUA=ON -DGVARS=OFF ${SRCDIR}
+  cmake ${COMMON_OPTIONS} -DPCB=NV14 -DLUA_COMPILER=NO -DHELI=NO -DLUA=YES -DGVARS=YES -DSIMU_AUDIO=NO -DSIMU_LUA_COMPILER=NO -DUSB_SERIAL=YES -DFONT=SQT5 -DMULTIMODULE=YES -DALLOW_NIGHTLY_BUILDS=YES -DDANGEROUS_MODULE_FUNCTIONS=YES -DAUTOSWITCH=YES -DAUTOSOURCE=YES -DBOOTLOADER=NO -DGUI=YES ../ ${SRCDIR}
   make -j${CORES} ${FIRMARE_TARGET}
-  make -j${CORES} libsimulator
-  make -j${CORES} gtests ; ./gtests ${TEST_OPTIONS}
+  make -j${CORES} simu
+  # make -j${CORES} gtests ; ./gtests ${TEST_OPTIONS}
 fi
 
 if [[ " T16HD HORUS ALL " =~ " ${FLAVOR} " ]] ; then
