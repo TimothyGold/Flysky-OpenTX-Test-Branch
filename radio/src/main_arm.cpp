@@ -29,13 +29,16 @@ extern uint8_t UsbModes;
 #if defined(STM32)
 void onUSBConnectMenu(const char *result)
 {
-  if (result == STR_USB_MASS_STORAGE) {
+  if (result == STR_USB_MASS_STORAGE)
+  {
     setSelectedUsbMode(USB_MASS_STORAGE_MODE);
   }
-  else if (result == STR_USB_JOYSTICK) {
+  else if (result == STR_USB_JOYSTICK)
+  {
     setSelectedUsbMode(USB_JOYSTICK_MODE);
   }
-  else if (result == STR_USB_SERIAL) {
+  else if (result == STR_USB_SERIAL)
+  {
     setSelectedUsbMode(USB_SERIAL_MODE);
   }
 }
@@ -44,10 +47,12 @@ void onUSBConnectMenu(const char *result)
 void handleUsbConnection()
 {
 #if defined(STM32) && !defined(SIMU)
-    setSelectedUsbMode(UsbModes);
-  if (!usbStarted() && usbPlugged() && !(getSelectedUsbMode() == USB_UNSELECTED_MODE)) {
+  setSelectedUsbMode(UsbModes);
+  if (!usbStarted() && usbPlugged() && !(getSelectedUsbMode() == USB_UNSELECTED_MODE))
+  {
     usbStart();
-    if (getSelectedUsbMode() == USB_MASS_STORAGE_MODE) {
+    if (getSelectedUsbMode() == USB_MASS_STORAGE_MODE)
+    {
       opentxClose(false);
       usbPluggedIn();
     }
@@ -65,9 +70,11 @@ void handleUsbConnection()
     }
   }
 #endif
-  if (usbStarted() && !usbPlugged()) {
+  if (usbStarted() && !usbPlugged())
+  {
     usbStop();
-    if (getSelectedUsbMode() == USB_MASS_STORAGE_MODE) {
+    if (getSelectedUsbMode() == USB_MASS_STORAGE_MODE)
+    {
       opentxResume();
     }
 #if !defined(BOOT)
@@ -75,16 +82,17 @@ void handleUsbConnection()
     UsbModes = USB_UNSELECTED_MODE;
 #endif
   }
-  if( !usbPlugged() )
+  if (!usbPlugged())
   {
-     UsbModes = g_eeGeneral.USBMode;
+    UsbModes = g_eeGeneral.USBMode;
   }
 #endif // defined(STM32) && !defined(SIMU)
 }
 
 void checkSpeakerVolume()
 {
-  if (currentSpeakerVolume != requiredSpeakerVolume) {
+  if (currentSpeakerVolume != requiredSpeakerVolume)
+  {
     currentSpeakerVolume = requiredSpeakerVolume;
 #if !defined(SOFTWARE_VOLUME)
     setScaledVolume(currentSpeakerVolume);
@@ -95,7 +103,8 @@ void checkSpeakerVolume()
 #if defined(EEPROM)
 void checkEeprom()
 {
-  if (!usbPlugged()) {
+  if (!usbPlugged())
+  {
     if (eepromIsWriting())
       eepromWriteProcess();
     else if (TIME_TO_WRITE())
@@ -106,31 +115,36 @@ void checkEeprom()
 void checkEeprom()
 {
 #if defined(RAMBACKUP)
-  if (TIME_TO_RAMBACKUP()) {
+  if (TIME_TO_RAMBACKUP())
+  {
     rambackupWrite();
     rambackupDirtyMsk = 0;
   }
 #endif
-  if (TIME_TO_WRITE()) {
+  if (TIME_TO_WRITE())
+  {
     storageCheck(false);
   }
 }
 #endif
 
-#define BAT_AVG_SAMPLES       8
+#define BAT_AVG_SAMPLES 8
 
 void checkBatteryAlarms()
 {
   // TRACE("checkBatteryAlarms()");
-  if (IS_TXBATT_WARNING() && g_vbat100mV > 30) {
+  if (IS_TXBATT_WARNING() && g_vbat100mV > 30)
+  {
     AUDIO_TX_BATTERY_LOW();
     // TRACE("checkBatteryAlarms(): battery low");
   }
 #if defined(PCBSKY9X)
-  else if (g_eeGeneral.temperatureWarn && getTemperature() >= g_eeGeneral.temperatureWarn) {
+  else if (g_eeGeneral.temperatureWarn && getTemperature() >= g_eeGeneral.temperatureWarn)
+  {
     AUDIO_TX_TEMP_HIGH();
   }
-  else if (g_eeGeneral.mAhWarn && (g_eeGeneral.mAhUsed + Current_used * (488 + g_eeGeneral.txCurrentCalibration)/8192/36) / 500 >= g_eeGeneral.mAhWarn) { // TODO move calculation into board file
+  else if (g_eeGeneral.mAhWarn && (g_eeGeneral.mAhUsed + Current_used * (488 + g_eeGeneral.txCurrentCalibration) / 8192 / 36) / 500 >= g_eeGeneral.mAhWarn)
+  { // TODO move calculation into board file
     AUDIO_TX_MAH_HIGH();
   }
 #endif
@@ -143,23 +157,25 @@ void checkBattery()
   static uint32_t batSum;
   static uint8_t sampleCount;
   // filter battery voltage by averaging it
-  if (g_vbat100mV == 0) {
+  if (g_vbat100mV == 0)
+  {
     g_vbat100mV = (getBatteryVoltage() + 5) / 10;
     batSum = 0;
     sampleCount = 0;
   }
-  else {
+  else
+  {
     batSum += getBatteryVoltage();
     // TRACE("checkBattery(): sampled = %d", getBatteryVoltage());
-    if (++sampleCount >= BAT_AVG_SAMPLES) {
-      g_vbat100mV = (batSum + BAT_AVG_SAMPLES * 5 ) / (BAT_AVG_SAMPLES * 10);
+    if (++sampleCount >= BAT_AVG_SAMPLES)
+    {
+      g_vbat100mV = (batSum + BAT_AVG_SAMPLES * 5) / (BAT_AVG_SAMPLES * 10);
       batSum = 0;
       sampleCount = 0;
       // TRACE("checkBattery(): g_vbat100mV = %d", g_vbat100mV);
     }
   }
 }
-
 
 void periodicTick_1s()
 {
@@ -179,24 +195,20 @@ void periodicTick()
   static uint8_t count10s;
   static uint32_t lastTime;
 
-  if ( (get_tmr10ms() - lastTime) >= 100 ) {
+  if ((get_tmr10ms() - lastTime) >= 100)
+  {
     lastTime += 100;
     periodicTick_1s();
-    if (++count10s >= 10) {
+    if (++count10s >= 10)
+    {
       count10s = 0;
       periodicTick_10s();
     }
   }
 }
 
-
 #if defined(GUI) && defined(COLORLCD)
-
-#if defined (PCBNV14)
-void guiMain(touch_event_type evt)
-#else
 void guiMain(event_t evt)
-#endif
 {
   bool refreshNeeded = false;
 #if defined(LUA)
@@ -204,78 +216,75 @@ void guiMain(event_t evt)
   static uint32_t lastLuaTime = 0;
   uint16_t interval = (lastLuaTime == 0 ? 0 : (t0 - lastLuaTime));
   lastLuaTime = t0;
-  if (interval > maxLuaInterval) {
+  if (interval > maxLuaInterval)
+  {
     maxLuaInterval = interval;
   }
-
   // run Lua scripts that don't use LCD (to use CPU time while LCD DMA is running)
   DEBUG_TIMER_START(debugTimerLuaBg);
-  luaTask(evt, RUN_MIX_SCRIPT | RUN_FUNC_SCRIPT | RUN_TELEM_BG_SCRIPT, false);
+  luaTask(0, RUN_MIX_SCRIPT | RUN_FUNC_SCRIPT | RUN_TELEM_BG_SCRIPT, false);
   DEBUG_TIMER_STOP(debugTimerLuaBg);
   // wait for LCD DMA to finish before continuing, because code from this point
   // is allowed to change the contents of LCD buffer
   //
   // WARNING: make sure no code above this line does any change to the LCD display buffer!
   //
-  //DEBUG_TIMER_START(debugTimerLcdRefreshWait);
-  //lcdRefreshWait();
-  //DEBUG_TIMER_STOP(debugTimerLcdRefreshWait);
-
+  DEBUG_TIMER_START(debugTimerLcdRefreshWait);
+  lcdRefreshWait();
+  DEBUG_TIMER_STOP(debugTimerLcdRefreshWait);
   // draw LCD from menus or from Lua script
   // run Lua scripts that use LCD
   DEBUG_TIMER_START(debugTimerLuaFg);
+  if (evt != 0)
+    TRACE("LUA EVENT %d", evt);
   refreshNeeded = luaTask(evt, RUN_STNDAL_SCRIPT, true);
-  if (!refreshNeeded) {
+  if (!refreshNeeded)
+  {
     refreshNeeded = luaTask(evt, RUN_TELEM_FG_SCRIPT, true);
   }
   DEBUG_TIMER_STOP(debugTimerLuaFg);
   t0 = get_tmr10ms() - t0;
-  if (t0 > maxLuaDuration) {
+  if (t0 > maxLuaDuration)
+  {
     maxLuaDuration = t0;
   }
 
 #else
-  lcdRefreshWait();   // WARNING: make sure no code above this line does any change to the LCD display buffer!
+  lcdRefreshWait(); // WARNING: make sure no code above this line does any change to the LCD display buffer!
 #endif
-
-#if 0
-  if (!refreshNeeded) {
-    DEBUG_TIMER_START(debugTimerMenus);
-    mainWindow.run();
-    DEBUG_TIMER_STOP(debugTimerMenus);
-  }
-
-  if (refreshNeeded) {
-    DEBUG_TIMER_START(debugTimerLcdRefresh);
-    lcdRefresh();
-    DEBUG_TIMER_STOP(debugTimerLcdRefresh);
-  }
-#else
-  mainWindow.run();
-#endif
+  // LUA is active
+  // prevent events from reaching the normal menus
+  // so Lua telemetry script can fully use them
+  mainWindow.run(refreshNeeded);
 }
 #elif defined(GUI)
 
-void handleGui(event_t event) {
+void handleGui(event_t event)
+{
   // if Lua standalone, run it and don't clear the screen (Lua will do it)
   // else if Lua telemetry view, run it and don't clear the screen
   // else clear scren and show normal menus
 #if defined(LUA)
-  if (luaTask(event, RUN_STNDAL_SCRIPT, true)) {
+  if (luaTask(event, RUN_STNDAL_SCRIPT, true))
+  {
     // standalone script is active
   }
-  else if (luaTask(event, RUN_TELEM_FG_SCRIPT, true)) {
+  else if (luaTask(event, RUN_TELEM_FG_SCRIPT, true))
+  {
     // the telemetry screen is active
     // prevent events from keys MENU, UP, DOWN, ENT(short) and EXIT(short) from reaching the normal menus,
     // so Lua telemetry script can fully use them
-    if (event) {
+    if (event)
+    {
       uint8_t key = EVT_KEY_MASK(event);
 #if defined(PCBXLITE)
       // SHIFT + LEFT/RIGHT LONG used to change telemetry screen on XLITE
-      if ((!IS_KEY_LONG(event) && key == KEY_RIGHT && IS_SHIFT_PRESSED()) || (!IS_KEY_LONG(event) && key == KEY_LEFT  && IS_SHIFT_PRESSED()) || (!IS_KEY_LONG(event) && key == KEY_EXIT)) {
+      if ((!IS_KEY_LONG(event) && key == KEY_RIGHT && IS_SHIFT_PRESSED()) || (!IS_KEY_LONG(event) && key == KEY_LEFT && IS_SHIFT_PRESSED()) || (!IS_KEY_LONG(event) && key == KEY_EXIT))
+      {
 #else
       // no need to filter out MENU and ENT(short), because they are not used by menuViewTelemetryFrsky()
-      if (key == KEY_PLUS || key == KEY_MINUS || (!IS_KEY_LONG(event) && key == KEY_EXIT)) {
+      if (key == KEY_PLUS || key == KEY_MINUS || (!IS_KEY_LONG(event) && key == KEY_EXIT))
+      {
 #endif
         // TRACE("Telemetry script event 0x%02x killed", event);
         event = 0;
@@ -303,7 +312,8 @@ void guiMain(event_t evt)
   static uint32_t lastLuaTime = 0;
   uint16_t interval = (lastLuaTime == 0 ? 0 : (t0 - lastLuaTime));
   lastLuaTime = t0;
-  if (interval > maxLuaInterval) {
+  if (interval > maxLuaInterval)
+  {
     maxLuaInterval = interval;
   }
 
@@ -311,7 +321,8 @@ void guiMain(event_t evt)
   luaTask(0, RUN_MIX_SCRIPT | RUN_FUNC_SCRIPT | RUN_TELEM_BG_SCRIPT, false);
 
   t0 = get_tmr10ms() - t0;
-  if (t0 > maxLuaDuration) {
+  if (t0 > maxLuaDuration)
+  {
     maxLuaDuration = t0;
   }
 #endif //#if defined(LUA)
@@ -323,7 +334,8 @@ void guiMain(event_t evt)
   //
   lcdRefreshWait();
 
-  if (menuEvent) {
+  if (menuEvent)
+  {
     // we have a popupMenuActive entry or exit event
     menuVerticalPosition = (menuEvent == EVT_ENTRY_UP) ? menuVerticalPositions[menuLevel] : 0;
     menuHorizontalPosition = 0;
@@ -331,27 +343,33 @@ void guiMain(event_t evt)
     menuEvent = 0;
   }
 
-  if (warningText) {
+  if (warningText)
+  {
     // show warning on top of the normal menus
     handleGui(0); // suppress events, they are handled by the warning
     DISPLAY_WARNING(evt);
   }
-  else if (popupMenuNoItems > 0) {
+  else if (popupMenuNoItems > 0)
+  {
     // popup menu is active display it on top of normal menus
     handleGui(0); // suppress events, they are handled by the popup
-    if (!inPopupMenu) {
+    if (!inPopupMenu)
+    {
       TRACE("Popup Menu started");
       inPopupMenu = true;
     }
-    const char * result = runPopupMenu(evt);
-    if (result) {
+    const char *result = runPopupMenu(evt);
+    if (result)
+    {
       TRACE("popupMenuHandler(%s)", result);
       popupMenuHandler(result);
     }
   }
-  else {
+  else
+  {
     // normal menus
-    if (inPopupMenu) {
+    if (inPopupMenu)
+    {
       TRACE("Popup Menu ended");
       inPopupMenu = false;
     }
@@ -362,8 +380,6 @@ void guiMain(event_t evt)
 }
 #endif
 
-extern std::queue<touch_event_type>TouchQueue;
-
 void perMain()
 {
   DEBUG_TIMER_START(debugTimerPerMain1);
@@ -373,56 +389,38 @@ void perMain()
   checkSpeakerVolume();
   checkEeprom();
   logsWrite();
-#if !defined (PCBFLYSKY)
+#if !defined(PCBFLYSKY)
   handleUsbConnection();
 #endif
   checkTrainerSettings();
   periodicTick();
   DEBUG_TIMER_STOP(debugTimerPerMain1);
 
-  if (mainRequestFlags & (1 << REQUEST_FLIGHT_RESET)) {
+  if (mainRequestFlags & (1 << REQUEST_FLIGHT_RESET))
+  {
     TRACE("Executing requested Flight Reset");
     flightReset();
     mainRequestFlags &= ~(1 << REQUEST_FLIGHT_RESET);
   }
-#if defined (PCBNV14)
-  touch_event_type evt;
-  memset(&evt, 0, sizeof(evt));
 
-  if (!TouchQueue.empty())
-  {
-    evt = TouchQueue.front();
-    TouchQueue.pop();
-    //TRACE("evt type:%d\r\n", evt.touch_type);
-  }
-
-  if (evt.touch_type != TE_NONE) {
-    if (g_eeGeneral.backlightMode & e_backlight_mode_keys) {
-      // on touch turn the light on
-      backlightOn();
-    }
-  }
-#else
   event_t evt = getEvent(false);
-
-  if (evt) {
-    if (g_eeGeneral.backlightMode & e_backlight_mode_keys) {
-      // on keypress turn the light on
-      backlightOn();
-    }
+  if (evt && (g_eeGeneral.backlightMode & e_backlight_mode_keys))
+  {
+    // on keypress turn the light on
+    backlightOn();
   }
-#endif
-
   doLoopCommonActions();
 #if defined(NAVIGATION_STICKS)
   uint8_t sticks_evt = getSticksNavigationEvent();
-  if (sticks_evt) {
+  if (sticks_evt)
+  {
     evt = sticks_evt;
   }
 #endif
 
 #if defined(RAMBACKUP)
-  if (unexpectedShutdown) {
+  if (unexpectedShutdown)
+  {
     drawFatalErrorScreen(STR_EMERGENCY_MODE);
     return;
   }
@@ -431,7 +429,8 @@ void perMain()
 #if defined(STM32)
   static bool sdcard_present_before = SD_CARD_PRESENT();
   bool sdcard_present_now = SD_CARD_PRESENT();
-  if (sdcard_present_now && !sdcard_present_before) {
+  if (sdcard_present_now && !sdcard_present_before)
+  {
     sdMount();
   }
   sdcard_present_before = sdcard_present_now;
@@ -439,14 +438,16 @@ void perMain()
 
 #if !defined(EEPROM)
   // In case the SD card is removed during the session
-  if (!SD_CARD_PRESENT() && !unexpectedShutdown) {
+  if (!SD_CARD_PRESENT() && !unexpectedShutdown)
+  {
     drawFatalErrorScreen(STR_NO_SDCARD);
     return;
   }
 #endif
 
 #if defined(STM32)
-  if (usbPlugged() && getSelectedUsbMode() == USB_MASS_STORAGE_MODE) {
+  if (usbPlugged() && getSelectedUsbMode() == USB_MASS_STORAGE_MODE)
+  {
     // disable access to menus
     lcdClear();
     // menuMainView(0);
@@ -462,7 +463,8 @@ void perMain()
 #endif
 
 #if defined(PCBTARANIS)
-  if (mainRequestFlags & (1 << REQUEST_SCREENSHOT)) {
+  if (mainRequestFlags & (1 << REQUEST_SCREENSHOT))
+  {
     writeScreenshot();
     mainRequestFlags &= ~(1 << REQUEST_SCREENSHOT);
   }
@@ -470,7 +472,7 @@ void perMain()
 
 #if defined(PCBX9E) && !defined(SIMU)
   toplcdRefreshStart();
-  setTopFirstTimer(getValue(MIXSRC_FIRST_TIMER+g_model.toplcdTimer));
+  setTopFirstTimer(getValue(MIXSRC_FIRST_TIMER + g_model.toplcdTimer));
   setTopSecondTimer(g_eeGeneral.globalTimer + sessionTimer);
   setTopRssi(TELEMETRY_RSSI());
   setTopBatteryValue(g_vbat100mV);
@@ -481,7 +483,7 @@ void perMain()
 #if defined(INTERNAL_GPS)
   gpsWakeup();
 #endif
- #if defined(PCBFLYSKY)
+#if defined(PCBFLYSKY)
   handleUsbConnection();
 #endif
 }

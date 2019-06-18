@@ -19,6 +19,7 @@
  */
 
 #include "opentx.h"
+#include "mainwindow.h"
 
 #define CS_LAST_VALUE_INIT -32768
 
@@ -627,9 +628,15 @@ swsrc_t getMovedSwitch() {
 }
 
 #if defined(GUI)
-void checkSwitches() {
-  //  return; // TODO later ...
-
+void checkSwitches()
+{
+#if defined (SIMU)
+  //in simu we can not refresh buffer
+  return;
+#endif
+#if defined(COLORLCD)
+    mainWindow.resetDisplayRect();
+#endif
 #if defined(MODULE_ALWAYS_SEND_PULSES)
   static swarnstate_t last_bad_switches = 0xff;
 #else
@@ -640,8 +647,8 @@ void checkSwitches() {
 #if defined(PCBTARANIS) || defined(PCBHORUS) || defined(PCBFLYSKY)
   uint8_t bad_pots = 0, last_bad_pots = 0xff;
 #endif
-
 #if !defined(MODULE_ALWAYS_SEND_PULSES)
+  static uint32_t updateTime = 0;
   while (1) {
 #if defined(TELEMETRY_MOD_14051) || defined(TELEMETRY_MOD_14051_SWAPPED)
 #define GETADC_COUNT (MUX_MAX + 1)
@@ -849,7 +856,6 @@ void checkSwitches() {
       x += 3 * FW + FW / 2;
     }
 #endif
-
       lcdRefresh();
       lcdSetContrast();
       clearKeyEvents();
@@ -875,10 +881,9 @@ void checkSwitches() {
 #endif
 }
 #endif
-
-    LED_ERROR_END();
-  }
-#endif  // GUI
+  LED_ERROR_END();
+}
+#endif // GUI
 
   void logicalSwitchesTimerTick() {
 #if defined(CPUARM)

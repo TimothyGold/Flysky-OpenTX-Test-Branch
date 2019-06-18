@@ -25,7 +25,8 @@
 #include "stddef.h"
 
 #if defined(__cplusplus) && !defined(SIMU)
-extern "C" {
+extern "C"
+{
 #endif
 
 #if __clang__
@@ -88,10 +89,10 @@ extern "C" {
 
 #define MB *1024 * 1024
 #define LUA_MEM_EXTRA_MAX \
-  (2 MB)  // max allowed memory usage for Lua bitmaps (in bytes)
-#define LUA_MEM_MAX \
-  (6 MB)  // max allowed memory usage for complete Lua  (in bytes), 0 means
-          // unlimited
+  (2 MB) // max allowed memory usage for Lua bitmaps (in bytes)
+#define LUA_MEM_MAX                                                        \
+  (6 MB) // max allowed memory usage for complete Lua  (in bytes), 0 means \
+         // unlimited
 
 // HSI is at 168Mhz (over-drive is not enabled!)
 #define PERI1_FREQUENCY 42000000
@@ -116,19 +117,20 @@ void boardOff(void);
 
 // Delays driver
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
-void delaysInit(void);
-void delay_01us(uint16_t nb);
-void delay_us(uint16_t nb);
-void delay_ms(uint32_t ms);
+  void delaysInit(void);
+  void delay_01us(uint16_t nb);
+  void delay_us(uint16_t nb);
+  void delay_ms(uint32_t ms);
 #ifdef __cplusplus
 }
 #endif
 
 // CPU Unique ID
 #define LEN_CPU_UID (3 * 8 + 2)
-void getCPUUniqueID(char* s);
+void getCPUUniqueID(char *s);
 
 // SD driver
 #define BLOCK_SIZE 512 /* Block Size in Bytes */
@@ -155,8 +157,8 @@ uint32_t sdMounted(void);
 
 #if defined(DISK_CACHE)
 #include "diskio.h"
-DRESULT __disk_read(BYTE drv, BYTE* buff, DWORD sector, UINT count);
-DRESULT __disk_write(BYTE drv, const BYTE* buff, DWORD sector, UINT count);
+DRESULT __disk_read(BYTE drv, BYTE *buff, DWORD sector, UINT count);
+DRESULT __disk_write(BYTE drv, const BYTE *buff, DWORD sector, UINT count);
 #else
 #define __disk_read disk_read
 #define __disk_write disk_write
@@ -166,9 +168,9 @@ DRESULT __disk_write(BYTE drv, const BYTE* buff, DWORD sector, UINT count);
 #define FLASH_PAGESIZE 256
 void flashUnlock(void);
 void flashLock(void);
-void flashWrite(uint32_t* address, uint32_t* buffer);
-uint32_t isFirmwareStart(const uint8_t* buffer);
-uint32_t isBootloaderStart(const uint8_t* buffer);
+void flashWrite(uint32_t *address, uint32_t *buffer);
+uint32_t isFirmwareStart(const uint8_t *buffer);
+uint32_t isBootloaderStart(const uint8_t *buffer);
 
 // SDRAM driver
 void SDRAM_Init(void);
@@ -212,19 +214,19 @@ void init_trainer_capture(void);
 void stop_trainer_capture(void);
 
 // Keys driver
-enum EnumKeys {
+enum EnumKeys
+{
+  KEY_ENTER,
+  KEY_EXIT,
   KEY_PGUP,
   KEY_PGDN,
-  KEY_ENTER,
-  KEY_MODEL,
-  KEY_UP = KEY_MODEL,
-  KEY_EXIT,
-  KEY_DOWN = KEY_EXIT,
+  KEY_UP,
+  KEY_DOWN,
+  KEY_RIGHT,
+  KEY_LEFT,
   KEY_TELEM,
-  KEY_RIGHT = KEY_TELEM,
+  KEY_MENU,
   KEY_RADIO,
-  KEY_LEFT = KEY_RADIO,
-
   TRM_BASE,
   TRM_LH_DWN = TRM_BASE,
   TRM_LH_UP,
@@ -236,14 +238,24 @@ enum EnumKeys {
   TRM_RH_UP,
   TRM_LS_DWN,
   TRM_LS_UP,
-  TRM_RS_DWN,
-  TRM_RS_UP,
-  TRM_LAST = TRM_RS_UP,
-
+  TRM_LEFT_CLICK,
+  TRM_RIGHT_CLICK,
+  TRM_LAST = TRM_RIGHT_CLICK,
   NUM_KEYS
 };
 
-enum EnumSwitches {
+enum ENUM_LUA_TOUCH_EVENT
+{
+  TOUCH_DOWN,
+  TOUCH_UP,
+  TOUCH_SLIDE_UP,
+  TOUCH_SLIDE_DOWN,
+  TOUCH_SLIDE_LEFT,
+  TOUCH_SLIDE_RIGHT
+};
+
+enum EnumSwitches
+{
   SW_SA,
   SW_SB,
   SW_SC,
@@ -260,7 +272,8 @@ enum EnumSwitches {
       (SWITCH_TOGGLE << 8) + (SWITCH_2POS << 6) + (SWITCH_TOGGLE << 4) + \
       (SWITCH_3POS << 2) + (SWITCH_2POS << 0);
 
-enum EnumSwitchesPositions {
+enum EnumSwitchesPositions
+{
   SW_SA0,
   SW_SA1,
   SW_SA2,
@@ -287,7 +300,8 @@ enum EnumSwitchesPositions {
   SW_SH2,
 };
 
-enum EnumPowerupState {
+enum EnumPowerupState
+{
   BOARD_POWER_OFF = 0xCAFEDEAD,
   BOARD_POWER_ON = 0xDEADBEEF,
   BOARD_STARTED = 0xBAADF00D,
@@ -339,12 +353,13 @@ void watchdogInit(unsigned int duration);
 
 // ADC driver
 #define NUM_POTS 2
-#define NUM_XPOTS 0  // NUM_POTS
+#define NUM_XPOTS 0 // NUM_POTS
 #define NUM_SLIDERS 0
 #define NUM_PWMANALOGS 0
 #define NUM_PWMSTICKS 0
 
-enum Analogs {
+enum Analogs
+{
   STICK1,
   STICK2,
   STICK3,
@@ -369,9 +384,10 @@ enum Analogs {
 
 #define DEFAULT_POTS_CONFIG   \
   (POT_WITHOUT_DETENT << 0) + \
-      (POT_WITHOUT_DETENT << 2)  // 2 pots without detent
+      (POT_WITHOUT_DETENT << 2) // 2 pots without detent
 
-enum CalibratedAnalogs {
+enum CalibratedAnalogs
+{
   CALIBRATED_STICK1,
   CALIBRATED_STICK2,
   CALIBRATED_STICK3,
@@ -397,32 +413,33 @@ extern uint16_t adcValues[NUM_ANALOGS];
 void adcInit(void);
 void adcRead(void);
 uint16_t getAnalogValue(uint8_t index);
-uint16_t getBatteryVoltage();  // returns current battery voltage in 10mV steps
+uint16_t getBatteryVoltage(); // returns current battery voltage in 10mV steps
 // uint16_t getBattery2Voltage();  // returns current battery voltage in 10mV
 // steps
 
-#define BATTERY_WARN 37  // 3.7V
-#define BATTERY_MIN 36   // 3.6V
-#define BATTERY_MAX 42   // 4.1V
+#define BATTERY_WARN 37 // 3.7V
+#define BATTERY_MIN 36  // 3.6V
+#define BATTERY_MAX 42  // 4.1V
 
 #if defined(__cplusplus) && !defined(SIMU)
-extern "C" {
+extern "C"
+{
 #endif
 
 // Power driver
 #define SOFT_PWR_CTRL
-void pwrInit(void);
-uint32_t pwrCheck(void);
+  void pwrInit(void);
+  uint32_t pwrCheck(void);
 #if defined(PCBFLYSKY)
-uint32_t lowPowerCheck(void);
+  uint32_t lowPowerCheck(void);
 #endif
-uint8_t UsbModeSelect(uint32_t index);
-void pwrOn(void);
-void pwrSoftReboot();
-void pwrOff(void);
-void pwrResetHandler(void);
-uint32_t pwrPressed(void);
-uint32_t pwrPressedDuration(void);
+  uint8_t UsbModeSelect(uint32_t index);
+  void pwrOn(void);
+  void pwrSoftReboot();
+  void pwrOff(void);
+  void pwrResetHandler(void);
+  uint32_t pwrPressed(void);
+  uint32_t pwrPressedDuration(void);
 #if defined(SIMU) || defined(NO_UNEXPECTED_SHUTDOWN)
 #define UNEXPECTED_SHUTDOWN() (false)
 #else
@@ -434,29 +451,29 @@ uint32_t pwrPressedDuration(void);
 #define LCD_H 480
 #define LCD_DEPTH 16
 #define LCD_CONTRAST_DEFAULT 25
-void lcdInit(void);
-void lcdNextLayer(void);
-void lcdRefresh(void);
-void DMACopy(void* src, void* dest, unsigned size);
-void DMAFillRect(uint16_t* dest, uint16_t destw, uint16_t desth, uint16_t x,
-                 uint16_t y, uint16_t w, uint16_t h, uint16_t color);
-void DMACopyBitmap(uint16_t* dest, uint16_t destw, uint16_t desth, uint16_t x,
-                   uint16_t y, const uint16_t* src, uint16_t srcw,
-                   uint16_t srch, uint16_t srcx, uint16_t srcy, uint16_t w,
-                   uint16_t h);
-void DMACopyAlphaBitmap(uint16_t* dest, uint16_t destw, uint16_t desth,
-                        uint16_t x, uint16_t y, const uint16_t* src,
-                        uint16_t srcw, uint16_t srch, uint16_t srcx,
-                        uint16_t srcy, uint16_t w, uint16_t h);
-void DMABitmapConvert(uint16_t* dest, const uint8_t* src, uint16_t w,
-                      uint16_t h, uint32_t format);
-void lcdSetContrast();
+  void lcdInit(void);
+  void lcdNextLayer(void);
+  void lcdRefresh(void);
+  void DMACopy(void *src, void *dest, unsigned size);
+  void DMAFillRect(uint16_t *dest, uint16_t destw, uint16_t desth, uint16_t x,
+                   uint16_t y, uint16_t w, uint16_t h, uint16_t color);
+  void DMACopyBitmap(uint16_t *dest, uint16_t destw, uint16_t desth, uint16_t x,
+                     uint16_t y, const uint16_t *src, uint16_t srcw,
+                     uint16_t srch, uint16_t srcx, uint16_t srcy, uint16_t w,
+                     uint16_t h);
+  void DMACopyAlphaBitmap(uint16_t *dest, uint16_t destw, uint16_t desth,
+                          uint16_t x, uint16_t y, const uint16_t *src,
+                          uint16_t srcw, uint16_t srch, uint16_t srcx,
+                          uint16_t srcy, uint16_t w, uint16_t h);
+  void DMABitmapConvert(uint16_t *dest, const uint8_t *src, uint16_t w,
+                        uint16_t h, uint32_t format);
+  void lcdSetContrast();
 #define lcdOff() backlightEnable(0) /* just disable the backlight */
 #define lcdSetRefVolt(...)
 #define lcdRefreshWait(...)
 
-// Backlight driver
-void backlightInit(void);
+  // Backlight driver
+  void backlightInit(void);
 #if defined(SIMU)
 #define backlightEnable(...)
 #else
@@ -480,7 +497,7 @@ void backlightEnable(uint8_t dutyCycle);
 #define isBacklightEnabled() true
 
 #if !defined(SIMU)
-void usbJoystickUpdate();
+  void usbJoystickUpdate();
 #endif
 #define USBD_MANUFACTURER_STRING "FlySky"
 #define USB_NAME "FlySky Nirvana NV14"
@@ -495,7 +512,7 @@ void usbJoystickUpdate();
 void audioInit(void);
 void audioConsumeCurrentBuffer(void);
 void Audio_Sine_Test(void);
-void audioSpiWriteBuffer(const uint8_t* buffer, uint32_t size);
+void audioSpiWriteBuffer(const uint8_t *buffer, uint32_t size);
 void audioSpiSetSpeed(uint8_t speed);
 uint8_t audioHardReset(void);
 uint8_t audioSoftReset(void);
@@ -512,8 +529,8 @@ void closeAudioAmp();
 #define SPI_SPEED_128 6
 #define SPI_SPEED_256 7
 
-#define audioDisableIrq()  // interrupts must stay enabled on NV14
-#define audioEnableIrq()   // interrupts must stay enabled on NV14
+#define audioDisableIrq() // interrupts must stay enabled on NV14
+#define audioEnableIrq()  // interrupts must stay enabled on NV14
 #if defined(PCBNV14)
 #define setSampleRate(freq)
 #else
@@ -537,8 +554,8 @@ void bluetoothDone(void);
 #define TELEMETRY_FIFO_SIZE 512
 void telemetryPortInit(uint32_t baudrate, uint8_t mode);
 void telemetryPortSetDirectionOutput(void);
-void sportSendBuffer(uint8_t* buffer, uint32_t count);
-uint8_t telemetryGetByte(uint8_t* byte);
+void sportSendBuffer(uint8_t *buffer, uint32_t count);
+uint8_t telemetryGetByte(uint8_t *byte);
 extern uint32_t telemetryErrors;
 
 // Sport update driver
