@@ -22,6 +22,7 @@
 #include "libwindows.h"
 #include "opentx.h"
 #include "widgets_setup.h"
+#include "model_telemetry.h" // ...just searching the bad
 
 ScreenThemePage::ScreenThemePage()
     : ZoneOptionPage(STR_USER_INTERFACE, ICON_THEME_SETUP) {}
