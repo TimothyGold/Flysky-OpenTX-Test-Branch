@@ -727,14 +727,18 @@ void checkSwitches() {
     // first - display warning
 #if defined(PCBTARANIS) || defined(PCBHORUS) || defined(PCBFLYSKY) || \
     defined(PCBNV14)
+    int x;
+    int y;
     if ((last_bad_switches != switches_states) || (last_bad_pots != bad_pots)) {
       drawAlertBox(STR_SWITCHWARN, NULL, STR_PRESSANYKEYTOSKIP);
       if (last_bad_switches == 0xff || last_bad_pots == 0xff) {
         AUDIO_ERROR_MESSAGE(AU_SWITCH_ALERT);
       }
-      int x = SWITCH_WARNING_LIST_X - SWITCH_WARNING_LIST_X_OFFSET,
-          y = SWITCH_WARNING_LIST_Y;
+
+      x = SWITCH_WARNING_LIST_X - SWITCH_WARNING_LIST_X_OFFSET;
+      y = SWITCH_WARNING_LIST_Y;
       int numWarnings = 0;
+
       LCD_SWITCH_WARN_BACKGROUND(1, y);
       for (int i = 0; i < NUM_SWITCHES; ++i) {
 #if defined(COLORLCD)
@@ -746,7 +750,7 @@ void checkSwitches() {
               // TEXT_COLOR : ALARM_COLOR;
               LcdFlags attr = ALARM_COLOR | DBLSIZE;
               drawSwitch(x, y, SWSRC_FIRST_SWITCH + i * 3 + state - 1, attr);
-              x += SWITCH_WARNING_LIST_INTERVAL;
+              y += SWITCH_WARNING_LIST_INTERVAL;
             } else if (numWarnings == 6) {
               lcdDrawText(x, y, "...", ALARM_COLOR);
             }
