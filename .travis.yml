@@ -8,6 +8,12 @@ virtualenv:
 
 python:
   - 3.4
+
+# safelist
+branches:
+  only:
+  - matrix14
+
 env:
   global:
     # - QT_BASE=53
@@ -18,6 +24,7 @@ env:
     # - GCC_ARM=/opt/gcc-arm-none-eabi/bin
     - AVR_FLAVORS="AVR9X 9X GRUVIN9X MEGA2560"
     - PYTHONPATH=${PYTHONPATH}:/usr/lib/python3/dist-packages
+
   matrix:
     #
     # ALL will build every individual board & DEFAULT, sequentially.

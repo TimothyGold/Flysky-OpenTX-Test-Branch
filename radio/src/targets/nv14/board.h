@@ -20,6 +20,8 @@
  * GNU General Public License for more details.
  */
 
+#include "../definitions.h"
+#include "cpu_id.h"
 #include "opentx_constants.h"
 #include "stdbool.h"
 #include "stddef.h"
@@ -35,13 +37,14 @@ extern "C"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
 #endif
-
+#if !defined(LUA_EXPORT_GENERATION)
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/misc.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_adc.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dbgmcu.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dma.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dma2d.h"
+#include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_exti.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_flash.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_fmc.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_gpio.h"
@@ -52,8 +55,10 @@ extern "C"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_rtc.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_sdio.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_spi.h"
+#include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_syscfg.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_tim.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_usart.h"
+#endif
 
 #if __clang__
 // Restore warnings about registers
@@ -90,7 +95,7 @@ extern "C"
 #define MB *1024 * 1024
 #define LUA_MEM_EXTRA_MAX \
   (2 MB) // max allowed memory usage for Lua bitmaps (in bytes)
-#define LUA_MEM_MAX                                                        \
+#define LUA_MEM_MAX \
   (6 MB) // max allowed memory usage for complete Lua  (in bytes), 0 means unlimited
 
 // HSI is at 168Mhz (over-drive is not enabled!)
@@ -113,6 +118,10 @@ extern uint16_t sessionTimer;
 // Board driver
 void boardInit(void);
 void boardOff(void);
+
+// Timers driver
+void init2MhzTimer();
+void init5msTimer();
 
 // Delays driver
 #ifdef __cplusplus
@@ -418,7 +427,7 @@ uint16_t getBatteryVoltage(); // returns current battery voltage in 10mV steps
 
 #define BATTERY_WARN 37 // 3.7V
 #define BATTERY_MIN 36  // 3.6V
-#define BATTERY_MAX 42  // 4.1V
+#define BATTERY_MAX 41  // 4.1V
 
 #if defined(__cplusplus) && !defined(SIMU)
 extern "C"
@@ -442,7 +451,7 @@ extern "C"
 #if defined(SIMU) || defined(NO_UNEXPECTED_SHUTDOWN)
 #define UNEXPECTED_SHUTDOWN() (false)
 #else
-#define UNEXPECTED_SHUTDOWN() (powerupReason == DIRTY_SHUTDOWN)
+#define UNEXPECTED_SHUTDOWN() (powerupReason == DIRTY_SHUTDOWN) || WAS_RESET_BY_WATCHDOG_OR_SOFTWARE())
 #endif
 
 // LCD driver
@@ -586,12 +595,22 @@ void auxSerialStop(void);
   (USART_FLAG_ORE | USART_FLAG_NE | USART_FLAG_FE | USART_FLAG_PE)
 
 // BT driver
+#define BT_TX_FIFO_SIZE 64
+#define BT_RX_FIFO_SIZE 128
+#define BLUETOOTH_BOOTLOADER_BAUDRATE 230400
 #define BLUETOOTH_FACTORY_BAUDRATE 57600
 #define BLUETOOTH_DEFAULT_BAUDRATE 115200
-void bluetoothInit(uint32_t baudrate);
+void bluetoothInit(uint32_t baudrate, bool enable);
 void bluetoothWriteWakeup(void);
 uint8_t bluetoothIsWriting(void);
-void bluetoothDone(void);
+void bluetoothDisable(void);
+
+#if defined(__cplusplus)
+#include "dmafifo.h"
+#include "fifo.h"
+extern DMAFifo<512> telemetryFifo;
+extern DMAFifo<32> auxSerialRxFifo;
+#endif
 
 extern uint8_t currentTrainerMode;
 void checkTrainerSettings(void);
