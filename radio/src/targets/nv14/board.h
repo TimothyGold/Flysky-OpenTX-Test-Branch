@@ -549,14 +549,6 @@ int32_t getVolume(void);
 #define VOLUME_LEVEL_MAX 23
 #define VOLUME_LEVEL_DEF 12
 
-// BT driver
-#define BLUETOOTH_FACTORY_BAUDRATE 57600
-#define BLUETOOTH_DEFAULT_BAUDRATE 115200
-void bluetoothInit(uint32_t baudrate);
-void bluetoothWriteWakeup(void);
-uint8_t bluetoothIsWriting(void);
-void bluetoothDone(void);
-
 // Telemetry driver
 #define TELEMETRY_FIFO_SIZE 512
 void telemetryPortInit(uint32_t baudrate, uint8_t mode);
