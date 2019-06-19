@@ -18,15 +18,15 @@
  * GNU General Public License for more details.
  */
 
-#include "opentx.h"
 #include "mainwindow.h"
+#include "opentx.h"
 
 #define CS_LAST_VALUE_INIT -32768
 
 #if defined(COLORLCD)
-  #define SWITCH_WARNING_LIST_X        WARNING_LINE_X
-  #define SWITCH_WARNING_LIST_Y        WARNING_LINE_Y+4*FH
-  #define SWITCH_WARNING_LIST_INTERVAL 35
+#define SWITCH_WARNING_LIST_X WARNING_LINE_X
+#define SWITCH_WARNING_LIST_Y WARNING_LINE_Y + 4 * FH
+#define SWITCH_WARNING_LIST_INTERVAL 35
 #elif LCD_W >= 212
 #define SWITCH_WARNING_LIST_X 60
 #define SWITCH_WARNING_LIST_Y 4 * FH + 3
@@ -614,14 +614,13 @@ swsrc_t getMovedSwitch() {
 }
 
 #if defined(GUI)
-void checkSwitches()
-{
-#if defined (SIMU)
-  //in simu we can not refresh buffer
+void checkSwitches() {
+#if defined(SIMU)
+  // in simu we can not refresh buffer
   return;
 #endif
 #if defined(COLORLCD)
-    mainWindow.resetDisplayRect();
+  mainWindow.resetDisplayRect();
 #endif
 #if defined(MODULE_ALWAYS_SEND_PULSES)
   static swarnstate_t last_bad_switches = 0xff;
@@ -743,12 +742,12 @@ void checkSwitches()
           unsigned int state = ((g_model.switchWarningState >> (3 * i)) & 0x07);
           if (state && state - 1 != ((switches_states >> (i * 2)) & 0x03)) {
             if (++numWarnings < 6) {
-              // LcdFlags attr = ((states & mask) == (switches_states & mask)) ? TEXT_COLOR : ALARM_COLOR;
+              // LcdFlags attr = ((states & mask) == (switches_states & mask)) ?
+              // TEXT_COLOR : ALARM_COLOR;
               LcdFlags attr = ALARM_COLOR | DBLSIZE;
-              drawSwitch(x, y, SWSRC_FIRST_SWITCH+i*3+state-1, attr);
-              y += SWITCH_WARNING_LIST_INTERVAL;
-            }
-            else if (numWarnings == 6) {
+              drawSwitch(x, y, SWSRC_FIRST_SWITCH + i * 3 + state - 1, attr);
+              x += SWITCH_WARNING_LIST_INTERVAL;
+            } else if (numWarnings == 6) {
               lcdDrawText(x, y, "...", ALARM_COLOR);
             }
           }
@@ -867,9 +866,9 @@ void checkSwitches()
 #endif
 }
 #endif
-  LED_ERROR_END();
-}
-#endif // GUI
+    LED_ERROR_END();
+  }
+#endif  // GUI
 
   void logicalSwitchesTimerTick() {
 #if defined(CPUARM)
