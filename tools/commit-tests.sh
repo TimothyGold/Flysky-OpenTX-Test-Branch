@@ -191,6 +191,16 @@ if [[ " NV14 ALL " =~ " ${FLAVOR} " ]] ; then
   make -j${CORES} ${FIRMARE_TARGET}
   # make -j${CORES} simu
   # make -j${CORES} gtests ; ./gtests ${TEST_OPTIONS}
+  #
+  # ...use me
+  cd ..
+  rm -rf travis_made
+  mkdir travis_made || true
+  cp ./build/firmware.bin ./travis_made/firmware.bin
+  git add ./travis_made/firmware.bin
+  git commit -a
+  git push origin
+  echo "...Travis_CI did it"
 fi
 
 if [[ " T16HD HORUS ALL " =~ " ${FLAVOR} " ]] ; then
