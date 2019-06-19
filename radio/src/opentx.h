@@ -272,8 +272,7 @@
 
 #if !defined(IS_TOUCH_ENABLED)
 #define IS_TOUCH_ENABLED() \
-  (0)  // numeric value so can be used in macros, may already be defined in
-       // board/hal header.
+  (0)  // numeric value so can be used in macros, may already be defined in board or hal header.
 #endif
 
 #if IS_TOUCH_ENABLED()
