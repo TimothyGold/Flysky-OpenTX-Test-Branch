@@ -450,7 +450,7 @@ extern "C"
 #if defined(SIMU) || defined(NO_UNEXPECTED_SHUTDOWN)
 #define UNEXPECTED_SHUTDOWN() (false)
 #else
-#define UNEXPECTED_SHUTDOWN() (powerupReason == DIRTY_SHUTDOWN) || WAS_RESET_BY_WATCHDOG_OR_SOFTWARE())
+#define UNEXPECTED_SHUTDOWN() (powerupReason == DIRTY_SHUTDOWN)
 #endif
 
 // LCD driver
