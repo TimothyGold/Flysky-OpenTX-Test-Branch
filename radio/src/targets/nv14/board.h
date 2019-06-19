@@ -21,7 +21,6 @@
  */
 
 #include "../definitions.h"
-#include "cpu_id.h"
 #include "opentx_constants.h"
 #include "stdbool.h"
 #include "stddef.h"
@@ -604,13 +603,6 @@ void bluetoothInit(uint32_t baudrate, bool enable);
 void bluetoothWriteWakeup(void);
 uint8_t bluetoothIsWriting(void);
 void bluetoothDisable(void);
-
-#if defined(__cplusplus)
-#include "dmafifo.h"
-#include "fifo.h"
-extern DMAFifo<512> telemetryFifo;
-extern DMAFifo<32> auxSerialRxFifo;
-#endif
 
 extern uint8_t currentTrainerMode;
 void checkTrainerSettings(void);
