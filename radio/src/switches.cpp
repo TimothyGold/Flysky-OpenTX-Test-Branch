@@ -24,23 +24,9 @@
 #define CS_LAST_VALUE_INIT -32768
 
 #if defined(COLORLCD)
-#define SWITCH_WARNING_LIST_X WARNING_LINE_X
-#define SWITCH_WARNING_LIST_Y (WARNING_LINE_Y + 3 * FH)
-#if defined(PCBNV14)
-#define SWITCH_WARNING_LIST_INTERVAL 64
-#define SWITCH_WARNING_LIST_X_OFFSET 160
-#define SWITCH_WARNING_W 200
-#define SWITCH_WARNING_H 50
-#define LCD_SWITCH_WARN_BACKGROUND(x, y)                               \
-  lcd->drawFilledRect(x, y, SWITCH_WARNING_W, SWITCH_WARNING_H, SOLID, \
-                      ROUND | TEXT_BGCOLOR);
-#else
-#define SWITCH_WARNING_LIST_INTERVAL 35
-#define SWITCH_WARNING_LIST_X_OFFSET 0
-#define SWITCH_WARNING_W 1
-#define SWITCH_WARNING_H 1
-#define LCD_SWITCH_WARN_BACKGROUND(x, y)
-#endif
+  #define SWITCH_WARNING_LIST_X        WARNING_LINE_X
+  #define SWITCH_WARNING_LIST_Y        WARNING_LINE_Y+4*FH
+  #define SWITCH_WARNING_LIST_INTERVAL 35
 #elif LCD_W >= 212
 #define SWITCH_WARNING_LIST_X 60
 #define SWITCH_WARNING_LIST_Y 4 * FH + 3
@@ -757,12 +743,12 @@ void checkSwitches()
           unsigned int state = ((g_model.switchWarningState >> (3 * i)) & 0x07);
           if (state && state - 1 != ((switches_states >> (i * 2)) & 0x03)) {
             if (++numWarnings < 6) {
-              // LcdFlags attr = ((states & mask) == (switches_states & mask)) ?
-              // TEXT_COLOR : ALARM_COLOR;
-              LcdFlags attr = ALARM_COLOR;
-              drawSwitch(x, y, SWSRC_FIRST_SWITCH + i * 3 + state - 1, attr);
-              x += SWITCH_WARNING_LIST_INTERVAL;
-            } else if (numWarnings == 6) {
+              // LcdFlags attr = ((states & mask) == (switches_states & mask)) ? TEXT_COLOR : ALARM_COLOR;
+              LcdFlags attr = ALARM_COLOR | DBLSIZE;
+              drawSwitch(x, y, SWSRC_FIRST_SWITCH+i*3+state-1, attr);
+              y += SWITCH_WARNING_LIST_INTERVAL;
+            }
+            else if (numWarnings == 6) {
               lcdDrawText(x, y, "...", ALARM_COLOR);
             }
           }
