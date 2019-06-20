@@ -404,51 +404,54 @@ class ModuleWindow : public Window {
           if (isModuleFlysky(moduleIndex)) resetPulsesFlySky(moduleIndex);
           return 0;
         } else {
-          if (isModuleR9M(moduleIndex) ||
-              (isModuleXJT(moduleIndex) &&
-               g_model.moduleData[moduleIndex].rfProtocol == RF_PROTO_X16)) {
-            bindButton->setText(STR_MODULE_BINDING);
-            update();
-            bindButton->setFocus();
-            Menu *menu = new Menu();
-            if (isModuleR9M_LBT(moduleIndex)) {
-              menu->addLine(STR_BINDING_25MW_CH1_8_TELEM_OFF, [=]() {
-                onBindMenu(STR_BINDING_25MW_CH1_8_TELEM_OFF);
-              });
-              if (!IS_TELEMETRY_INTERNAL_MODULE()) {
-                menu->addLine(STR_BINDING_25MW_CH1_8_TELEM_ON, [=]() {
-                  onBindMenu(STR_BINDING_25MW_CH1_8_TELEM_ON);
-                });
-              }
-              menu->addLine(STR_BINDING_500MW_CH1_8_TELEM_OFF, [=]() {
-                onBindMenu(STR_BINDING_500MW_CH1_8_TELEM_OFF);
-              });
-              menu->addLine(STR_BINDING_500MW_CH9_16_TELEM_OFF, [=]() {
-                onBindMenu(STR_BINDING_500MW_CH9_16_TELEM_OFF);
-              });
-            } else {
-              if (!(IS_TELEMETRY_INTERNAL_MODULE() &&
-                    moduleIndex == EXTERNAL_MODULE)) {
-                menu->addLine(STR_BINDING_1_8_TELEM_ON,
-                              [=]() { onBindMenu(STR_BINDING_1_8_TELEM_ON); });
-              }
-              menu->addLine(STR_BINDING_1_8_TELEM_OFF,
-                            [=]() { onBindMenu(STR_BINDING_1_8_TELEM_OFF); });
+            if (isModuleR9M(moduleIndex) || (isModuleXJT(moduleIndex) && g_model.moduleData[moduleIndex].rfProtocol == RF_PROTO_X16)) {
+                bindButton->setText(STR_MODULE_BINDING);
+                update();
+                bindButton->setFocus();
+                Menu * menu = new Menu();
+                if (isModuleR9M_LBT(moduleIndex)) {
+                    menu->addLine(STR_BINDING_25MW_CH1_8_TELEM_OFF, [=]() {
+                        onBindMenu(STR_BINDING_25MW_CH1_8_TELEM_OFF);
+                    });
+                    if (!IS_TELEMETRY_INTERNAL_MODULE()) {
+                        menu->addLine(STR_BINDING_25MW_CH1_8_TELEM_ON, [=]() {
+                            onBindMenu(STR_BINDING_25MW_CH1_8_TELEM_ON);
+                        });
+                    }
+                    menu->addLine(STR_BINDING_500MW_CH1_8_TELEM_OFF, [=]() {
+                        onBindMenu(STR_BINDING_500MW_CH1_8_TELEM_OFF);
+                    });
+                    menu->addLine(STR_BINDING_500MW_CH9_16_TELEM_OFF, [=]() {
+                        onBindMenu(STR_BINDING_500MW_CH9_16_TELEM_OFF);
+                    });
+                }
+                else {
+                    if (!(IS_TELEMETRY_INTERNAL_MODULE() && moduleIndex == EXTERNAL_MODULE)) {
+                        menu->addLine(STR_BINDING_1_8_TELEM_ON, [=]() {
+                            onBindMenu(STR_BINDING_1_8_TELEM_ON);
+                        });
+                    }
+                    menu->addLine(STR_BINDING_1_8_TELEM_OFF, [=]() {
+                        onBindMenu(STR_BINDING_1_8_TELEM_OFF);
+                    });
 
-              if (!(IS_TELEMETRY_INTERNAL_MODULE() &&
-                    moduleIndex == EXTERNAL_MODULE)) {
-                menu->addLine(STR_BINDING_9_16_TELEM_ON,
-                              [=]() { onBindMenu(STR_BINDING_9_16_TELEM_ON); });
-              }
-              menu->addLine(STR_BINDING_9_16_TELEM_OFF,
-                            [=]() { onBindMenu(STR_BINDING_9_16_TELEM_OFF); });
+                    if (!(IS_TELEMETRY_INTERNAL_MODULE() && moduleIndex == EXTERNAL_MODULE)) {
+                        menu->addLine(STR_BINDING_9_16_TELEM_ON, [=]() {
+                            onBindMenu(STR_BINDING_9_16_TELEM_ON);
+                        });
+                    }
+                    menu->addLine(STR_BINDING_9_16_TELEM_OFF, [=]() {
+                        onBindMenu(STR_BINDING_9_16_TELEM_OFF);
+                    });
+                }
             }
-          } else {
-            bindButton->setText(STR_MODULE_BINDING);
-            moduleFlag[moduleIndex] = MODULE_BIND;
-          }
-          if (isModuleFlysky(moduleIndex)) onFlySkyBindReceiver(moduleIndex);
-          return 1;
+            else {
+                bindButton->setText(STR_MODULE_BINDING);
+                moduleFlag[moduleIndex] = MODULE_BIND;
+            }
+            if (isModuleFlysky(moduleIndex))
+                onFlySkyBindReceiver(moduleIndex);
+            return 1;
         }
       });
       bindButton->setCheckHandler([=]() {
@@ -514,43 +517,51 @@ class ModuleWindow : public Window {
     getParent()->moveWindowsTop(top(), adjustHeight());
   }
 
-  void onBindMenu(const char *result) {
-    // uint8_t moduleIdx = 0; // TODO (menuVerticalPosition >=
-    // ITEM_MODEL_EXTERNAL_MODULE_LABEL ? EXTERNAL_MODULE : INTERNAL_MODULE);
+  void onBindMenu(const char * result)
+  {
+      //uint8_t moduleIdx = 0; // TODO (menuVerticalPosition >= ITEM_MODEL_EXTERNAL_MODULE_LABEL ? EXTERNAL_MODULE : INTERNAL_MODULE);
 
-    if (result == STR_BINDING_25MW_CH1_8_TELEM_OFF) {
-      g_model.moduleData[moduleIndex].pxx.power = R9M_LBT_POWER_25;
-      g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
-      g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
-    } else if (result == STR_BINDING_25MW_CH1_8_TELEM_ON) {
-      g_model.moduleData[moduleIndex].pxx.power = R9M_LBT_POWER_25;
-      g_model.moduleData[moduleIndex].pxx.receiver_telem_off = false;
-      g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
-    } else if (result == STR_BINDING_500MW_CH1_8_TELEM_OFF) {
-      g_model.moduleData[moduleIndex].pxx.power = R9M_LBT_POWER_500;
-      g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
-      g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
-    } else if (result == STR_BINDING_500MW_CH9_16_TELEM_OFF) {
-      g_model.moduleData[moduleIndex].pxx.power = R9M_LBT_POWER_500;
-      g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
-      g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = true;
-    } else if (result == STR_BINDING_1_8_TELEM_ON) {
-      g_model.moduleData[moduleIndex].pxx.receiver_telem_off = false;
-      g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
-    } else if (result == STR_BINDING_1_8_TELEM_OFF) {
-      g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
-      g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
-    } else if (result == STR_BINDING_9_16_TELEM_ON) {
-      g_model.moduleData[moduleIndex].pxx.receiver_telem_off = false;
-      g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = true;
-    } else if (result == STR_BINDING_9_16_TELEM_OFF) {
-      g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
-      g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = true;
-    } else {
-      return;
-    }
+      if (result == STR_BINDING_25MW_CH1_8_TELEM_OFF) {
+          g_model.moduleData[moduleIndex].pxx.power = R9M_LBT_POWER_25;
+          g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
+          g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
+      }
+      else if (result == STR_BINDING_25MW_CH1_8_TELEM_ON) {
+          g_model.moduleData[moduleIndex].pxx.power = R9M_LBT_POWER_25;
+          g_model.moduleData[moduleIndex].pxx.receiver_telem_off = false;
+          g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
+      }
+      else if (result == STR_BINDING_500MW_CH1_8_TELEM_OFF) {
+          g_model.moduleData[moduleIndex].pxx.power = R9M_LBT_POWER_500;
+          g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
+          g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
+      }
+      else if (result == STR_BINDING_500MW_CH9_16_TELEM_OFF) {
+          g_model.moduleData[moduleIndex].pxx.power = R9M_LBT_POWER_500;
+          g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
+          g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = true;
+      }
+      else if (result == STR_BINDING_1_8_TELEM_ON) {
+          g_model.moduleData[moduleIndex].pxx.receiver_telem_off = false;
+          g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
+      }
+      else if (result == STR_BINDING_1_8_TELEM_OFF) {
+          g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
+          g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = false;
+      }
+      else if (result == STR_BINDING_9_16_TELEM_ON) {
+          g_model.moduleData[moduleIndex].pxx.receiver_telem_off = false;
+          g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = true;
+      }
+      else if (result == STR_BINDING_9_16_TELEM_OFF) {
+          g_model.moduleData[moduleIndex].pxx.receiver_telem_off = true;
+          g_model.moduleData[moduleIndex].pxx.receiver_channel_9_16 = true;
+      }
+      else {
+          return;
+      }
 
-    moduleFlag[moduleIndex] = MODULE_BIND;
+      moduleFlag[moduleIndex] = MODULE_BIND;
   }
 };
 
@@ -787,11 +798,11 @@ void ModelSetupPage::build(Window *window) {
   {
     grid.nextLine();
     new StaticText(window, grid.getLabelSlot(), STR_TRAINER);
-    new Choice(window, grid.getFieldSlot(), STR_VTRAINERMODES, 0, 3,
-               GET_DEFAULT(g_model.trainerMode), [=](int32_t newValue) {
-                 g_model.trainerMode = newValue;
-                 SET_DIRTY();
-               });
+    new Choice(window, grid.getFieldSlot(), STR_VTRAINERMODES, 0, 3, GET_DEFAULT(g_model.trainerMode),
+                                 [=](int32_t newValue) {
+        g_model.trainerMode = newValue;
+        SET_DIRTY();
+    });
   }
 #endif
 
