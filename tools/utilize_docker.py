@@ -79,7 +79,7 @@ nv14_default_options = OrderedDict([
 available_languages = ("EN")
 
 # Check that the source is valid
-workbench_folder = source_dir
+workbench_folder = build_dir
 
 if not os.path.exists(source_dir + "/CMakeLists.txt"):
     error("* NV14 source not found. Where is the git repo?")
@@ -142,9 +142,6 @@ start = time.time()
 # create the build directory
 if not os.path.exists(build_dir):
     os.mkdir(build_dir)
-
-if not os.path.exists(output_dir):
-    os.mkdir(output_dir)
 
 # else:
     # os.chdir(build_dir)
