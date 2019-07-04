@@ -1,8 +1,8 @@
-project(OpenTX)
+project(OpenTX_NV14)
 
 set(VERSION_MAJOR "2")
-set(VERSION_MINOR "1")
-set(VERSION_REVISION "5")
+set(VERSION_MINOR "2")
+set(VERSION_REVISION "3")
 set(VERSION_SUFFIX $ENV{OPENTX_VERSION_SUFFIX})
 set(VERSION_FAMILY ${VERSION_MAJOR}.${VERSION_MINOR})
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION}${VERSION_SUFFIX})
@@ -11,7 +11,7 @@ set(SDCARD_VERSION  ${VERSION_MAJOR}.${VERSION_MINOR}V${SDCARD_REVISION})
 
 cmake_minimum_required(VERSION 2.8)
 cmake_policy(SET CMP0020 NEW)
-cmake_policy(SET CMP0023 OLD)
+cmake_policy(SET CMP0023 NEW)
 if(POLICY CMP0042)
   cmake_policy(SET CMP0042 NEW)
 endif()
@@ -28,7 +28,6 @@ endif()
 set(CMAKE_COLOR_MAKEFILE ON)
 
 set(CMAKE_CXX_STANDARD 11)
-add_definitions(-D_GLIBCXX_USE_C99=1) # proper to_string definition
 
 set(RADIO_DIRECTORY ${PROJECT_SOURCE_DIR}/radio)
 set(RADIO_SRC_DIRECTORY ${RADIO_DIRECTORY}/src)
@@ -54,7 +53,7 @@ set(APP_CUSTOM_DBG_LEVEL "0" CACHE STRING
 set(APP_CUSTOM_DBG_SHOW_FILE "DEFAULT" CACHE STRING
   "Show source file names in debug output. 1/0/DEFAULT (default is ON with DEBUG builds).")
 
-option(VERBOSE_CMAKELISTS "Show extra information while processing CMakeLists.txt files." OFF)
+option(VERBOSE_CMAKELISTS "Show extra information while processing CMakeLists.txt files." ON)
 option(WARNINGS_AS_ERRORS "Treat any compiler warning as an error (adds -Werror flag)." OFF)
 
 if(WIN32)
@@ -188,3 +187,6 @@ add_subdirectory(${RADIO_SRC_DIRECTORY})
 if(Qt5Core_FOUND AND NOT DISABLE_COMPANION)
   add_subdirectory(${COMPANION_SRC_DIRECTORY})
 endif()
+
+set(CMAKE_C_COMPILER /usr/bin/clang)
+set(CMAKE_CXX_COMPILER /usr/bin/clang++)

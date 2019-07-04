@@ -17,15 +17,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-/***************************************************************************************************
-
-***************************************************************************************************/
-#ifndef      __BATTERY_DRIVER_H__
-    #define  __BATTERY_DRIVER_H__
-/***************************************************************************************************
-
-***************************************************************************************************/
+#pragma once
 
 #include "board.h"
 
@@ -35,7 +27,6 @@ enum ChargeState
   CHARGE_STARTED,
   CHARGE_FINISHED
 };
-
 
 #define PWR_CHARGE_FINISHED_GPIO                 GPIOB
 #define PWR_CHARGE_FINISHED_GPIO_REG             PWR_CHARGE_FINISHED_GPIO->IDR
@@ -51,6 +42,5 @@ enum ChargeState
 extern void battery_charge_init();
 extern void handle_battery_charge();
 extern uint16_t get_battery_charge_state();
-extern uint16_t getBatteryVoltage();   // returns current battery voltage in 10mV steps
-
-#endif
+extern uint16_t getBatteryVoltage(); // returns current battery voltage in 10mV steps
+extern uint16_t getBatteryVoltage2(); // returns current battery voltage in 10mV steps

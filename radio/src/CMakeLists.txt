@@ -3,11 +3,7 @@ include(Bitmaps)
 
 set(PROJECT_TYPE NV14)
 
-if (PROJECT_TYPE STREQUAL NV14)
-    set(PCB_TYPES X7 XLITE X9D X9D+ X9E X10 X12S 9X 9XR 9X128 9XR128 9X2561 GRUVIN9X MEGA2560 SKY9X 9XRPRO AR9X I8 NV14)
-else()
-  set(PCB_TYPES X7 XLITE X9D X9D+ X9E X10 X12S SKY9X 9XRPRO AR9X)
-endif()
+set(PCB_TYPES X7 XLITE X9D X9D+ X9E X10 X12S 9X 9XR 9X128 9XR128 9X2561 GRUVIN9X MEGA2560 SKY9X 9XRPRO AR9X I8 NV14)
 set(GUI_LANGUAGES CZ DE EN ES FR IT PT SK SE PL HU NL)
 set(TTS_LANGUAGES CZ DE EN ES FR IT PT SK SE PL HU RU)
 
@@ -20,10 +16,10 @@ set_property(CACHE SPLASH PROPERTY STRINGS DEFAULT OFF FRSKY)
 set(PPM_UNIT "PERCENT_PREC1" CACHE STRING "PPM display unit (US/PERCENT_PREC1/PERCENT_PREC0)")
 set_property(CACHE PPM_UNIT PROPERTY STRINGS US PERCENT_PREC1 PERCENT_PREC0)
 set(DEFAULT_MODE "" CACHE STRING "Default sticks mode")
-set(FONT "STD" CACHE STRING "Choose font : STD or SQT5")
+set(FONT "" CACHE STRING "Choose font : STD or SQT5")
 set_property(CACHE FONT PROPERTY STRINGS SQT5)
 
-option(HELI "Heli menu" ON)
+option(HELI "Heli menu" OFF)
 option(FLIGHT_MODES "Flight Modes" ON)
 option(CURVES "Curves" ON)
 option(GVARS "Global variables" ON)
@@ -31,7 +27,7 @@ option(GUI "GUI enabled" ON)
 option(PPM_CENTER_ADJUSTABLE "PPM center adjustable" ON)
 option(PPM_LIMITS_SYMETRICAL "PPM limits symetrical" OFF)
 option(OVERRIDE_CHANNEL_FUNCTION "OverrideChannel function available" ON)
-option(DANGEROUS_MODULE_FUNCTIONS "Dangerous module functions (RangeCheck / Bind / Module OFF, etc.) available" OFF)
+option(DANGEROUS_MODULE_FUNCTIONS "Dangerous module functions (RangeCheck / Bind / Module OFF, etc.) available" ON)
 option(FAI "Competition mode (no telemetry)" OFF)
 option(AUTOSOURCE "Automatic source detection in menus" ON)
 option(AUTOSWITCH "Automatic switch detection in menus" ON)
@@ -41,6 +37,7 @@ option(WATCHDOG_DISABLED "Disable hardware Watchdog" OFF)
 if(SDL_FOUND)
   option(SIMU_AUDIO "Enable simulator audio." ON)
 endif()
+option(LUA "Enable LUA support" ON)
 option(SIMU_DISKIO "Enable disk IO simulation in simulator. Simulator will use FatFs module and simulated IO layer that  uses \"./sdcard.image\" file as image of SD card. This file must contain whole SD card from first to last sector" OFF)
 option(SIMU_LUA_COMPILER "Pre-compile and save Lua scripts in simulator." ON)
 option(FAS_PROTOTYPE "Support of old FAS prototypes (different resistors)" OFF)
@@ -133,7 +130,7 @@ else()
   message(FATAL_ERROR "Unknown PCB '${PCB}'")
 endif()
 
-if(NOT PCB STREQUAL 9XR AND NOT PCB STREQUAL 9XRPRO AND NOT PCB STREQUAL I8 AND NOT PCB STREQUAL NV14)
+if(NOT PCB STREQUAL 9XR AND NOT PCB STREQUAL 9XRPRO AND NOT PCB STREQUAL NV14)
   option(DBLKEYS "Double Keys" ON)
   if(DBLKEYS)
     add_definitions(-DDBLKEYS)
@@ -369,10 +366,6 @@ if(NIGHTLY_BUILD_WARNING)
   add_definitions(-DNIGHTLY_BUILD_WARNING)
 endif(NIGHTLY_BUILD_WARNING)
 
-if(USEHORUSBT)
-  add_definitions(-DUSEHORUSBT)
-endif(USEHORUSBT)
-
 if(BOOTLOADER)
   add_definitions(-DBOOTLOADER)
 endif(BOOTLOADER)
@@ -474,7 +467,11 @@ set(CMAKE_EXE_LINKER_FLAGS "")
 set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_C_COMPILER> <FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET>")
 set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET>")
 
-use_cxx11()  # ensure gnu++11 in CXX_FLAGS with CMake < 3.1
+# Use the official way
+use_cxx11()  # ensure gnu++11 in CXX_FLAGS with 
+
+# my way 
+#set (CMAKE_CXX_STANDARD 11)
 
 find_program(BASH bash HINTS "c:/cygwin/bin/" "c:/msys/bin/" DOC "bash shell for firmware size report (eg. c:/cygwin/bin/bash.exe on Windows).")
 
