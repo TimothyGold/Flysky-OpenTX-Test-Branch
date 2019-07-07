@@ -10,7 +10,7 @@
 
 <img src="TravisCI-Mascot-2.png" width="75">
 
-[![Build Status](https://travis-ci.com/derdoktor667/Flysky-OpenTX-Test-Branch.svg?branch=derdoktor667%2Freloaded14)](https://travis-ci.com/derdoktor667/Flysky-OpenTX-Test-Branch)
+[![Build Status](https://travis-ci.com/derdoktor667/Flysky-OpenTX-Test-Branch.svg?branch=derdoktor667%2Fnv14-rebuilding)](https://travis-ci.com/derdoktor667/Flysky-OpenTX-Test-Branch)
 
 ## <u>This is not affiliated with Flysky / uFPV or anyone else.</u>
 
