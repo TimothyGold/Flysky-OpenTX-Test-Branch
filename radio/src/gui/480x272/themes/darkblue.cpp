@@ -245,11 +245,15 @@ class DarkblueTheme: public Theme
       }*/
 
       drawTopbarDatetime();
+
+      return 0;
+
     }
 
     virtual bool drawMenuIcon(uint8_t index, uint8_t position, bool selected) const
     {
       lcd->drawBitmap(50+position*MENU_ICONS_SPACING, 7, selected ? menuIconSelected[index] : menuIconNormal[index]);
+      return 0;
     }
 
   protected:
