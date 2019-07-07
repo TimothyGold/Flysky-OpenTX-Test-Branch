@@ -23,7 +23,10 @@
 #if defined(SIMU)
 // not needed
 #elif defined(PCBNV14)
-const int8_t ana_direction[NUM_ANALOGS] = {0};
+const int8_t ana_direction[NUM_ANALOGS] = {
+    0 /*STICK1*/, 0 /*STICK2*/, 0 /*STICK3*/, 0 /*STICK4*/, 0 /*POT1*/,
+    0 /*POT2*/,   0 /*SWA*/,    0 /*SWB*/,    0 /*SWC*/,    -1 /*SWD*/,
+    0 /*SWE*/,    -1 /*SWF*/,   0 /*SWH*/,    0 /*SWG*/,    0 /*TX_VOLTAGE*/};
 const uint8_t anas_mapping[NUM_ANALOGS] = {
     0 /*STICK1*/, 1 /*STICK2*/, 2 /*STICK3*/, 3 /*STICK4*/, 4 /*POT1*/,
     5 /*POT2*/,   6 /*SWA*/,    13 /*SWB*/,   7 /*SWC*/,    14 /*SWD*/,
@@ -71,6 +74,10 @@ const int8_t ana_direction[NUM_ANALOGS] = {1, -1, 1, -1, 1, -1, 0, 1, 1, 1};
 const int8_t ana_direction[NUM_ANALOGS] = {1, -1, 1, -1, 1, 1, 0, 1, 1, 1};
 #endif
 
+#ifndef NUM_SUB_ANALOGS
+#define NUM_SUB_ANALOGS 0
+#endif
+
 #if NUM_PWMSTICKS > 0
 #define FIRST_ANALOG_ADC (STICKS_PWM_ENABLED() ? NUM_PWMSTICKS : 0)
 #define NUM_MAIN_ANALOGS_ADC \
@@ -81,9 +88,7 @@ const int8_t ana_direction[NUM_ANALOGS] = {1, -1, 1, -1, 1, 1, 0, 1, 1, 1};
 #define NUM_MAIN_ANALOGS_ADC_EXT (NUM_MAIN_ANALOGS - 10)
 #else
 #define FIRST_ANALOG_ADC 0
-#define FIRST_SUB_ANALOG_ADC 0
-#define NUM_MAIN_ANALOGS_ADC (SUB_ANALOG_POS)
-#define NUM_SUB_ANALOGS_ADC (NUM_ANALOGS - SUB_ANALOG_POS)
+#define NUM_MAIN_ANALOGS_ADC (NUM_ANALOGS - NUM_SUB_ANALOGS)
 #endif
 
 uint16_t adcValues[NUM_ANALOGS] __DMA;
@@ -119,10 +124,10 @@ void adcInit() {
   ADC_MAIN->CR2 = ADC_CR2_ADON | ADC_CR2_DMA | ADC_CR2_DDS;
   ADC_MAIN->SQR1 = (NUM_MAIN_ANALOGS_ADC - 1)
                    << 20;  // bits 23:20 = number of conversions
-#if defined(PCBNV14)
+#if NUM_SUB_ANALOGS > 0
   ADC_SUB->CR1 = ADC_CR1_SCAN;
   ADC_SUB->CR2 = ADC_CR2_ADON | ADC_CR2_DMA | ADC_CR2_DDS;
-  ADC_SUB->SQR1 = (NUM_SUB_ANALOGS_ADC - 1)
+  ADC_SUB->SQR1 = (NUM_SUB_ANALOGS - 1)
                   << 20;  // bits 23:20 = number of conversions
 #endif
 #if defined(PCBX10)
@@ -220,7 +225,7 @@ void adcInit() {
   ADC_MAIN_DMA_Stream->NDTR = NUM_MAIN_ANALOGS_ADC;
   ADC_MAIN_DMA_Stream->FCR = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH_0;
 
-#if defined(PCBNV14)
+#if NUM_SUB_ANALOGS > 0
   ADC_SUB->SMPR1 = ADC_SAMPTIME + (ADC_SAMPTIME << 3) + (ADC_SAMPTIME << 6) +
                    (ADC_SAMPTIME << 9) + (ADC_SAMPTIME << 12) +
                    (ADC_SAMPTIME << 15) + (ADC_SAMPTIME << 18) +
@@ -236,8 +241,9 @@ void adcInit() {
   ADC_SUB_DMA_Stream->CR = DMA_SxCR_PL | ADC_SUB_DMA_SxCR_CHSEL |
                            DMA_SxCR_MSIZE_0 | DMA_SxCR_PSIZE_0 | DMA_SxCR_MINC;
   ADC_SUB_DMA_Stream->PAR = CONVERT_PTR_UINT(&ADC_SUB->DR);
-  ADC_SUB_DMA_Stream->M0AR = CONVERT_PTR_UINT(&adcValues[SUB_ANALOG_POS]);
-  ADC_SUB_DMA_Stream->NDTR = NUM_SUB_ANALOGS_ADC;
+  ADC_SUB_DMA_Stream->M0AR =
+      CONVERT_PTR_UINT(&adcValues[NUM_ANALOGS - NUM_SUB_ANALOGS]);
+  ADC_SUB_DMA_Stream->NDTR = NUM_SUB_ANALOGS;
   ADC_SUB_DMA_Stream->FCR = DMA_SxFCR_DMDIS | DMA_SxFCR_FTH_0;
 #endif
 #if defined(PCBX9E)
@@ -265,6 +271,8 @@ void adcInit() {
     sticksPwmInit();
   }
 #endif
+  // Avoid reading wrong values when the adcRead not be called.
+  adcRead();
 }
 
 void adcSingleRead() {
@@ -273,7 +281,7 @@ void adcSingleRead() {
   ADC_MAIN_SET_DMA_FLAGS();
   ADC_MAIN_DMA_Stream->CR |= DMA_SxCR_EN;  // Enable DMA
   ADC_MAIN->CR2 |= (uint32_t)ADC_CR2_SWSTART;
-#if defined(PCBNV14)
+#if NUM_SUB_ANALOGS > 0
   ADC_SUB_DMA_Stream->CR &= ~DMA_SxCR_EN;  // Disable DMA
   ADC_SUB->SR &= ~(uint32_t)(ADC_SR_EOC | ADC_SR_STRT | ADC_SR_OVR);
   ADC_SUB_SET_DMA_FLAGS();
@@ -346,10 +354,8 @@ void adcRead() {
 #endif
 }
 
-uint16_t getRTCBatteryVoltage() {
-// #warning "TODO RTC voltage"
-  return 330;
-}
+// TODO
+void adcStop() {}
 
 #if !defined(SIMU)
 uint16_t getAnalogValue(uint8_t index) {
