@@ -197,10 +197,10 @@ uint8_t intmoduleGetByte(uint8_t *byte)
 }
 
 static uint8_t dmaBuffer[512] __DMA;
-void intmoduleSendBufferDMA(uint8_t *data, uint8_t size)
+void intmoduleSendBufferDMA(uint8_t *data, int size)
 {
   // compiler workround
-  uint8_t fivetwelf = 512;
+  int fivetwelf = 512;
   //
 
   if (IS_PXX_PROTOCOL(s_current_protocol[INTERNAL_MODULE]) || IS_FLYSKY_PROTOCOL(s_current_protocol[INTERNAL_MODULE]))

@@ -228,7 +228,7 @@ binsize = os.stat(output_path).st_size
 info("Build completed in {0:.1f} seconds.".format((end-start)))
 info("Firmware file: %s" % (output_path))
 info("Firmware size: {0:.2f}KB ({1:.2f}%)".format(
-    binsize/1024, float(binsize)/float(nv14_max_size)))
+    binsize/1024, float(binsize)/float(nv14_max_size/1024)))
 
 # Exit with an error if the firmware is too big
 # if binsize > max_size:
