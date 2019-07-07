@@ -347,7 +347,7 @@ void adcRead() {
 }
 
 uint16_t getRTCBatteryVoltage() {
-#warning "TODO RTC voltage"
+// #warning "TODO RTC voltage"
   return 330;
 }
 
