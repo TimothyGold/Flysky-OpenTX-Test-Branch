@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  * Copyright (C) OpenTX
  *
@@ -18,9 +20,8 @@
  * GNU General Public License for more details.
  */
 
-#ifndef _BOARD_H_
-#define _BOARD_H_
-
+#include "../definitions.h"
+#include "hal.h"
 #include "stddef.h"
 #include "stdbool.h"
 #include "opentx_constants.h"
@@ -55,6 +56,12 @@ extern "C" {
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_adc.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/misc.h"
 
+#if defined(PCBNV14)
+#include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_adc.h"
+#endif
+
+#include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/misc.h"
+
 #if __clang__
 // Restore warnings about registers
 #pragma clang diagnostic pop
@@ -71,8 +78,6 @@ extern "C" {
 #include "usb_conf.h"
 #include "usbd_conf.h"
 #endif
-
-#include "hal.h"
 
 #include "touch_driver.h"
 #include "hallStick_driver.h"
@@ -98,12 +103,18 @@ extern "C" {
 #define TIMER_MULT_APB2                 2
 
 #define strcpy_P strcpy
+#define strcat_P strcat
 
 extern uint16_t sessionTimer;
 
 #define SLAVE_MODE()                    (g_model.trainerMode == TRAINER_MODE_SLAVE)
 
-#define TRAINER_CONNECTED()             (GPIO_ReadInputDataBit(TRAINER_DETECT_GPIO, TRAINER_DETECT_GPIO_PIN) == Bit_SET)
+// #if defined(PCBNV14)
+//   #define TRAINER_CONNECTED() (GPIO_ReadInputDataBit(TRAINER_DETECT_GPIO,
+//   TRAINER_DETECT_GPIO_PIN) == Bit_SET)
+// #else
+#define TRAINER_CONNECTED() (GPIO_ReadInputDataBit(TRAINER_DETECT_GPIO, TRAINER_DETECT_GPIO_PIN) == Bit_RESET)
+// #endif
 
 // Board driver
 void boardInit(void);
@@ -161,12 +172,15 @@ DRESULT __disk_write(BYTE drv, const BYTE * buff, DWORD sector, UINT count);
 #define FLASH_PAGESIZE                  256
 void flashUnlock(void);
 void flashLock(void);
+void unlockFlash(void);
+void lockFlash(void);
 void flashWrite(uint32_t * address, uint32_t * buffer);
 uint32_t isFirmwareStart(const uint8_t * buffer);
 uint32_t isBootloaderStart(const uint8_t * buffer);
 
 // SDRAM driver
 void sdramInit(void);
+void SDRAM_Init(void);
 
 // Pulses driver
 #define INTERNAL_MODULE_OFF()           GPIO_SetBits(INTMODULE_PWR_GPIO, INTMODULE_PWR_GPIO_PIN)
@@ -178,6 +192,7 @@ void sdramInit(void);
 #define IS_INTERNAL_MODULE_ON()         (GPIO_ReadInputDataBit(INTMODULE_PWR_GPIO, INTMODULE_PWR_GPIO_PIN) == Bit_SET)
 #define IS_EXTERNAL_MODULE_ON()         (GPIO_ReadInputDataBit(EXTMODULE_PWR_GPIO, EXTMODULE_PWR_GPIO_PIN) == Bit_SET)
 #define IS_UART_MODULE(port)            (port == INTERNAL_MODULE)
+#define IS_PXX2_INTERNAL_ENABLED() (false)
 
 void init_no_pulses(uint32_t port);
 void disable_no_pulses(uint32_t port);
@@ -191,6 +206,9 @@ void init_crossfire(uint32_t module_index);
 void disable_crossfire(uint32_t module_index);
 void init_sbusOut(uint32_t module_index);
 void disable_sbusOut(uint32_t module_index);
+
+void init_intmodule_heartbeat();
+void check_intmodule_heartbeat();
 
 // Trainer driver
 void init_trainer_ppm(void);
@@ -229,6 +247,9 @@ enum EnumKeys
   NUM_KEYS
 };
 
+#define IS_SHIFT_KEY(index) (false)
+#define IS_SHIFT_PRESSED() (false)
+
 enum VirtualKeys {
   VKEY_MIN,
   VKEY_MAX,
@@ -261,6 +282,7 @@ enum EnumSwitches
   NUM_SWITCHES
 };
 
+#define STORAGE_NUM_SWITCHES NUM_SWITCHES
 #define DEFAULT_SWITCH_CONFIG (SWITCH_TOGGLE << 14) + (SWITCH_3POS << 12) + (SWITCH_3POS << 10) + (SWITCH_TOGGLE << 8) + (SWITCH_2POS << 6) + (SWITCH_TOGGLE << 4) + (SWITCH_3POS << 2) + (SWITCH_2POS << 0);
 
 enum EnumSwitchesPositions
@@ -289,7 +311,10 @@ enum EnumSwitchesPositions
   SW_SH0,
   SW_SH1,
   SW_SH2,
+  NUM_SWITCHES_POSITIONS
 };
+
+#define STORAGE_NUM_SWITCHES_POSITIONS (STORAGE_NUM_SWITCHES * 3)
 
 enum EnumPowerupState
 {
@@ -299,14 +324,13 @@ enum EnumPowerupState
   BOARD_REBOOT = 0xC00010FF,
 };
 
-
-
 void monitorInit(void);
 void keysInit(void);
 uint8_t keyState(uint8_t index);
 uint32_t switchState(uint8_t index);
 uint32_t readKeys(void);
 uint32_t readTrims(void);
+
 #define TRIMS_PRESSED()                 (readTrims())
 #define KEYS_PRESSED()                  (readKeys())
 #define DBLKEYS_PRESSED_RGT_LFT(in)     (false)
@@ -343,10 +367,14 @@ void watchdogInit(unsigned int duration);
 #endif
 
 // ADC driver
-#define NUM_POTS                        2
-#define NUM_XPOTS                       0 // NUM_POTS
-#define NUM_SLIDERS                     0
-#define NUM_PWMANALOGS                  0
+#define NUM_POTS 2
+#define NUM_XPOTS 0  // NUM_POTS
+#define NUM_SLIDERS 0
+#define NUM_PWMSTICKS 0
+#define NUM_MOUSE_ANALOGS 0
+#define STORAGE_NUM_POTS 5
+#define STORAGE_NUM_SLIDERS 0
+#define STORAGE_NUM_MOUSE_ANALOGS 0
 
 enum Analogs {
   STICK1,
@@ -365,12 +393,13 @@ enum Analogs {
   SWF,
   SWG,
   SWH,
+  SUB_ANALOG_POS = SWH,
+  SWITCH_END = SWH,
   TX_VOLTAGE,
   NUM_ANALOGS
 };
 
 #define NUM_SUB_ANALOGS 2
-
 #define DEFAULT_POTS_CONFIG (POT_WITHOUT_DETENT << 0) + (POT_WITHOUT_DETENT << 2) // 2 pots without detent
 
 enum CalibratedAnalogs {
@@ -400,7 +429,7 @@ void adcInit(void);
 void adcRead(void);
 uint16_t getAnalogValue(uint8_t index);
 uint16_t getBatteryVoltage();   // returns current battery voltage in 10mV steps
-// uint16_t getBattery2Voltage();  // returns current battery voltage in 10mV steps
+uint16_t getBattery2Voltage();  // returns current battery voltage in 10mV steps
 
 #define BATTERY_WARN                  37 // 3.7V
 #define BATTERY_MIN                   36 // 3.6V
@@ -414,9 +443,7 @@ extern "C" {
 #define SOFT_PWR_CTRL
 void pwrInit(void);
 uint32_t pwrCheck(void);
-#if defined(PCBFLYSKY)
 uint32_t lowPowerCheck(void);
-#endif
 uint8_t UsbModeSelect( uint32_t index );
 void pwrOn(void);
 void pwrSoftReboot();
@@ -427,7 +454,7 @@ uint32_t pwrPressedDuration(void);
 #if defined(SIMU) || defined(NO_UNEXPECTED_SHUTDOWN)
   #define UNEXPECTED_SHUTDOWN()         (false)
 #else
-  #define UNEXPECTED_SHUTDOWN()        (powerupReason == DIRTY_SHUTDOWN)
+#define UNEXPECTED_SHUTDOWN() ((powerupReason == DIRTY_SHUTDOWN) || WAS_RESET_BY_WATCHDOG_OR_SOFTWARE())
 #endif
 
 // LCD driver
@@ -443,10 +470,14 @@ void DMAFillRect(uint16_t * dest, uint16_t destw, uint16_t desth, uint16_t x, ui
 void DMACopyBitmap(uint16_t * dest, uint16_t destw, uint16_t desth, uint16_t x, uint16_t y, const uint16_t * src, uint16_t srcw, uint16_t srch, uint16_t srcx, uint16_t srcy, uint16_t w, uint16_t h);
 void DMACopyAlphaBitmap(uint16_t * dest, uint16_t destw, uint16_t desth, uint16_t x, uint16_t y, const uint16_t * src, uint16_t srcw, uint16_t srch, uint16_t srcx, uint16_t srcy, uint16_t w, uint16_t h);
 void DMABitmapConvert(uint16_t * dest, const uint8_t * src, uint16_t w, uint16_t h, uint32_t format);
+void lcdStoreBackupBuffer(void);
+int lcdRestoreBackupBuffer(void);
 void lcdSetContrast();
 #define lcdOff()                        backlightEnable(0) /* just disable the backlight */
 #define lcdSetRefVolt(...)
 #define lcdRefreshWait(...)
+void lcdStoreBackupBuffer(void);
+int lcdRestoreBackupBuffer(void);
 
 // Backlight driver
 void backlightInit(void);
@@ -457,7 +488,7 @@ void backlightEnable(uint8_t dutyCycle);
 #endif
 
 #define BACKLIGHT_LEVEL_MAX             100
-#define BACKLIGHT_LEVEL_MIN             15
+#define BACKLIGHT_LEVEL_MIN             40
 
 #define BACKLIGHT_ENABLE()              backlightEnable(unexpectedShutdown ? BACKLIGHT_LEVEL_MAX : BACKLIGHT_LEVEL_MAX-g_eeGeneral.backlightBright)
 #define BACKLIGHT_DISABLE()             backlightEnable(unexpectedShutdown ? BACKLIGHT_LEVEL_MAX : ((g_eeGeneral.blOffBright == BACKLIGHT_LEVEL_MIN) && (g_eeGeneral.backlightMode != e_backlight_mode_off)) ? 0 : g_eeGeneral.blOffBright)
@@ -474,7 +505,6 @@ void usbJoystickUpdate();
 #if defined(__cplusplus) && !defined(SIMU)
 }
 #endif
-
 
 // Audio driver
 void audioInit(void);
@@ -508,7 +538,7 @@ void setScaledVolume(uint8_t volume);
 void setVolume(uint8_t volume);
 int32_t getVolume(void);
 #define VOLUME_LEVEL_MAX               23
-#define VOLUME_LEVEL_DEF               23
+#define VOLUME_LEVEL_DEF               12
 
 // Telemetry driver
 #define TELEMETRY_FIFO_SIZE             512
@@ -531,7 +561,6 @@ extern void audioKeyPress();
 #define HAPTIC_OFF()                    hapticOff()
 #define AUDIO_KEY_PRESS()               audioKeyPress()
 
-
 // Second serial port driver
 #define AUX_SERIAL
 #define DEBUG_BAUDRATE                  115200
@@ -542,6 +571,14 @@ void auxSerialPutc(char c);
 void auxSerialSbusInit(void);
 void auxSerialStop(void);
 #define USART_FLAG_ERRORS               (USART_FLAG_ORE | USART_FLAG_NE | USART_FLAG_FE | USART_FLAG_PE)
+
+// BT driver
+#define BLUETOOTH_FACTORY_BAUDRATE 57600
+#define BLUETOOTH_DEFAULT_BAUDRATE 115200
+void bluetoothInit(uint32_t baudrate);
+void bluetoothWriteWakeup(void);
+uint8_t bluetoothIsWriting(void);
+void bluetoothDone(void);
 
 extern uint8_t currentTrainerMode;
 void checkTrainerSettings(void);
@@ -554,5 +591,3 @@ extern Fifo<uint8_t, 32> auxSerialRxFifo;
 #endif
 
 uint8_t touchPressed(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
-
-#endif // _BOARD_H_

@@ -10,13 +10,14 @@ set(HAPTIC YES)
 set(GUI_DIR 480x272)
 set(TARGET_DIR nv14)
 
-if(BOOTLOADER)
-  set(LINKER_SCRIPT targets/nv14/stm32f4_flash_bootloader.ld)
-else()
+# if(BOOTLOADER)
+#   set(LINKER_SCRIPT targets/nv14/stm32f4_flash_bootloader.ld)
+# else()
   set(LINKER_SCRIPT targets/nv14/stm32f4_flash.ld)
-endif()
+# endif()
 
 set(RAMBACKUP YES)
+set(LUA YES)
 set(PPM_LIMITS_SYMETRICAL YES)
 # for size report script
 set(CPU_TYPE_FULL STM32F429BIT6)
@@ -35,7 +36,7 @@ add_definitions(-DINTERNAL_MODULE_BAUDRATE=${PCB_RF_BAUD})
 add_definitions(-DSOFTWARE_VOLUME)
 set(TARGET_SRC
   ${TARGET_SRC}
-  #../common/arm/stm32/audio_dac_driver.cpp
+  # ../common/arm/stm32/audio_dac_driver.cpp
   audio_spi_driver.cpp
   battery_driver.cpp
   ../common/arm/stm32/adc_driver.cpp
@@ -58,6 +59,9 @@ add_definitions(-DSTM32F429_439xx -DSDRAM -DCOLORLCD)
 add_definitions(-DEEPROM_VARIANT=0 -DAUDIO -DVOICE -DRTCLOCK)
 # add_definitions(-DGPS_USART_BAUDRATE=${INTERNAL_GPS_BAUDRATE})
 add_definitions(-DPWR_BUTTON_${PWR_BUTTON})
+if(NOT UNEXPECTED_SHUTDOWN)
+  add_definitions(-DNO_UNEXPECTED_SHUTDOWN)
+endif()
 add_definitions(-DCROSSFIRE_NATIVE)
 add_definitions(-DFLYSKY_HALL_STICKS_REVERSE)
 #add_definitions(-DFLYSKY_AUTO_POWER_DOWN)
@@ -111,6 +115,7 @@ set(TARGET_SRC
   extmodule_driver.cpp
   trainer_driver.cpp
   ../common/arm/stm32/intmodule_serial_driver.cpp
+#  ../common/arm/stm32/bluetooth_driver.cpp
   )
 
 set(FIRMWARE_TARGET_SRC
@@ -129,6 +134,14 @@ if(BOOTLOADER)
   ${FIRMWARE_TARGET_SRC}
   ../common/arm/loadboot.cpp
   )
+
+# add_definitions(-DBLUETOOTH)
+
+# set(SRC
+#  ${SRC}
+#  bluetooth.cpp
+#  )
+
 endif()
 
 set(PULSES_SRC

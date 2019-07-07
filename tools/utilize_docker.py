@@ -41,6 +41,7 @@ header('* Nirvana NV14 - https://cloud.docker.com/repository/docker/derdoktor667
 # Specify some paths for the build
 base_dir = os.getcwd()
 source_dir = base_dir
+build_dirty = "../"
 build_dir_name = "/buildit"
 output_dir_name = "/firmware_built"
 build_dir = (source_dir + build_dir_name)
@@ -151,6 +152,8 @@ if not os.path.exists(build_dir):
     # if cleanBuildFolder.returncode != 0:
     #    error("WARNING: clean up build folder failed.")
 
+os.chdir(build_dir)
+
 #
 info("Starting build...")
 
@@ -166,7 +169,7 @@ for opt, value in extra_command_options.items():
     buildCommand.append("-D%s=%s" % (opt, value))
 
 # Append the source directory
-buildCommand.append(source_dir)
+buildCommand.append(build_dirty)
 
 # Output the cmake command line
 info(" ".join(buildCommand))
