@@ -1,5 +1,7 @@
 option(DISK_CACHE "Enable SD card disk cache" YES)
 option(UNEXPECTED_SHUTDOWN "Enable the Unexpected Shutdown screen" YES)
+option(FLYSKY_HALL_STICKS "sticks for FlySky hall sticks" ON)
+option(FLYSKY_HALL_STICKS_REVERSE "Reverse sticks for FlySky hall sticks" OFF)
 set(PWR_BUTTON "PRESS" CACHE STRING "Pwr button type (PRESS/SWITCH)")
 
 set(CPU_TYPE STM32F4)
@@ -10,11 +12,11 @@ set(HAPTIC YES)
 set(GUI_DIR 480x272)
 set(TARGET_DIR nv14)
 
-# if(BOOTLOADER)
-#   set(LINKER_SCRIPT targets/nv14/stm32f4_flash_bootloader.ld)
-# else()
+if(BOOTLOADER)
+  set(LINKER_SCRIPT targets/nv14/stm32f4_flash_bootloader.ld)
+else()
   set(LINKER_SCRIPT targets/nv14/stm32f4_flash.ld)
-# endif()
+endif()
 
 set(RAMBACKUP YES)
 set(LUA YES)
@@ -39,7 +41,7 @@ set(TARGET_SRC
   # ../common/arm/stm32/audio_dac_driver.cpp
   audio_spi_driver.cpp
   battery_driver.cpp
-  ../common/arm/stm32/adc_driver.cpp
+  adc_driver.cpp
   )
 
 set(FIRMWARE_TARGET_SRC
@@ -52,10 +54,11 @@ set(FONTS_TARGET nv14_fonts)
 set(LCD_DRIVER lcd_driver.cpp)
 set(LUA_EXPORT lua_export_nv14)
 set(TOUCH_DRIVER touch_driver.cpp)
+set(HARDWARE_TOUCH YES)
 
 set(FIRMWARE_DEPENDENCIES ${FIRMWARE_DEPENDENCIES} ${BITMAPS_TARGET})
 
-add_definitions(-DSTM32F429_439xx -DSDRAM -DCOLORLCD)
+add_definitions(-DSTM32F429_439xx -DSDRAM -DCOLORLCD -DLIBOPENUI -DHARDWARE_TOUCH)
 add_definitions(-DEEPROM_VARIANT=0 -DAUDIO -DVOICE -DRTCLOCK)
 # add_definitions(-DGPS_USART_BAUDRATE=${INTERNAL_GPS_BAUDRATE})
 add_definitions(-DPWR_BUTTON_${PWR_BUTTON})
@@ -107,6 +110,11 @@ endif()
 
 set(AUX_SERIAL_DRIVER ../common/arm/stm32/aux_serial_driver.cpp)
 
+set(SRC
+  ${SRC}
+  io/frsky_firmware_update.cpp
+  )
+
 set(GVAR_SCREEN model_gvars.cpp)
 
 set(TARGET_SRC
@@ -134,6 +142,7 @@ if(BOOTLOADER)
   ${FIRMWARE_TARGET_SRC}
   ../common/arm/loadboot.cpp
   )
+endif()
 
 # add_definitions(-DBLUETOOTH)
 
@@ -141,8 +150,6 @@ if(BOOTLOADER)
 #  ${SRC}
 #  bluetooth.cpp
 #  )
-
-endif()
 
 set(PULSES_SRC
   ${PULSES_SRC}
