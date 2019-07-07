@@ -18,11 +18,11 @@
  * GNU General Public License for more details.
  */
 
-#include "opentx.h"
 #include "debug.h"
+#include "opentx.h"
 
 Fifo<uint8_t, 64> intmoduleRxFifo;
-DMAFifo<512> intmoduleDMAFifo __DMA (INTMODULE_RX_DMA_STREAM);
+DMAFifo<512> intmoduleDMAFifo __DMA(INTMODULE_RX_DMA_STREAM);
 
 void intmoduleStop()
 {
@@ -50,11 +50,11 @@ void intmoduleNoneStart()
 
   INTMODULE_TIMER->CR1 &= ~TIM_CR1_CEN;
   INTMODULE_TIMER->PSC = INTMODULE_TIMER_FREQ / 2000000 - 1; // 0.5uS (2Mhz)
-  INTMODULE_TIMER->ARR = 36000; // 9mS
-  INTMODULE_TIMER->CCR2 = 32000; // Update time
-  INTMODULE_TIMER->EGR = 1; // Restart
-  INTMODULE_TIMER->SR &= ~TIM_SR_CC2IF; // Clear flag
-  INTMODULE_TIMER->DIER |= TIM_DIER_CC2IE; // Enable this interrupt
+  INTMODULE_TIMER->ARR = 36000;                              // 9mS
+  INTMODULE_TIMER->CCR2 = 32000;                             // Update time
+  INTMODULE_TIMER->EGR = 1;                                  // Restart
+  INTMODULE_TIMER->SR &= ~TIM_SR_CC2IF;                      // Clear flag
+  INTMODULE_TIMER->DIER |= TIM_DIER_CC2IE;                   // Enable this interrupt
   INTMODULE_TIMER->CR1 |= TIM_CR1_CEN;
   NVIC_EnableIRQ(INTMODULE_TIMER_IRQn);
   NVIC_SetPriority(INTMODULE_TIMER_IRQn, 7);
@@ -67,7 +67,8 @@ void intmodulePxxStart()
   NVIC_InitTypeDef NVIC_InitStructure;
   NVIC_InitStructure.NVIC_IRQChannel = INTMODULE_TX_DMA_Stream_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; /* Not used as 4 bits are used for the pre-emption priority. */;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; /* Not used as 4 bits are used for the pre-emption priority. */
+  ;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
@@ -137,23 +138,22 @@ void intmodulePxxStart()
   USART_ITConfig(INTMODULE_USART, USART_IT_TXE, DISABLE);
   USART_Cmd(INTMODULE_USART, ENABLE);
   DMA_Cmd(INTMODULE_RX_DMA_STREAM, ENABLE); // TRACE("RF DMA receive started...");
- #endif
+#endif
   // Timer
   INTMODULE_TIMER->CR1 &= ~TIM_CR1_CEN;
   INTMODULE_TIMER->PSC = INTMODULE_TIMER_FREQ / 2000000 - 1; // 0.5uS (2Mhz)
-  INTMODULE_TIMER->ARR = 18000; // 9mS
-  INTMODULE_TIMER->CCR2 = 15000; // Update time
+  INTMODULE_TIMER->ARR = 18000;                              // 9mS
+  INTMODULE_TIMER->CCR2 = 15000;                             // Update time
   INTMODULE_TIMER->CCER |= TIM_CCER_CC2E;
-  INTMODULE_TIMER->EGR |= TIM_EGR_CC2G; //
+  INTMODULE_TIMER->EGR |= TIM_EGR_CC2G;                          //
   INTMODULE_TIMER->CCMR1 |= TIM_CCMR1_OC2M_1 | TIM_CCMR1_OC2M_0; // Toggle CC1 o/p
-  INTMODULE_TIMER->SR &= ~TIM_SR_CC2IF; // Clear flag
-  INTMODULE_TIMER->DIER |= TIM_DIER_CC2IE;  // Enable this interrupt
+  INTMODULE_TIMER->SR &= ~TIM_SR_CC2IF;                          // Clear flag
+  INTMODULE_TIMER->DIER |= TIM_DIER_CC2IE;                       // Enable this interrupt
   INTMODULE_TIMER->CR1 |= TIM_CR1_CEN;
   NVIC_SetPriority(INTMODULE_TIMER_IRQn, 7);
   NVIC_EnableIRQ(INTMODULE_TIMER_IRQn);
 
   intmodule_hal_inited = 1;
-
 }
 
 extern "C" void INTMODULE_USART_IRQHandler(void)
@@ -162,9 +162,11 @@ extern "C" void INTMODULE_USART_IRQHandler(void)
 
   // Receive
   uint32_t status = INTMODULE_USART->SR;
-  while (status & (USART_FLAG_RXNE | USART_FLAG_ERRORS)) {
+  while (status & (USART_FLAG_RXNE | USART_FLAG_ERRORS))
+  {
     uint8_t data = INTMODULE_USART->DR;
-    if (!(status & USART_FLAG_ERRORS)) {
+    if (!(status & USART_FLAG_ERRORS))
+    {
       intmoduleRxFifo.push(data);
     }
     status = INTMODULE_USART->SR;
@@ -174,32 +176,41 @@ extern "C" void INTMODULE_USART_IRQHandler(void)
 extern "C" void INTMODULE_TX_DMA_Stream_IRQHandler(void)
 {
   DEBUG_INTERRUPT(INT_DMA2S7);
-  if (DMA_GetITStatus(INTMODULE_TX_DMA_STREAM, INTMODULE_TX_DMA_FLAG_TC)) {
+  if (DMA_GetITStatus(INTMODULE_TX_DMA_STREAM, INTMODULE_TX_DMA_FLAG_TC))
+  {
     // TODO we could send the 8 next channels here (when needed)
     DMA_ClearITPendingBit(INTMODULE_TX_DMA_STREAM, INTMODULE_TX_DMA_FLAG_TC);
   }
 }
 
-uint8_t intmoduleGetByte(uint8_t * byte)
+uint8_t intmoduleGetByte(uint8_t *byte)
 {
-    if (intmodule_hal_inited == 0) {
-        return 0; // incase of call before initialization
-    }
+  if (intmodule_hal_inited == 0)
+  {
+    return 0; // incase of call before initialization
+  }
 #ifdef INTMODULE_RX_INT
-    return intmoduleRxFifo.pop(*byte);
+  return intmoduleRxFifo.pop(*byte);
 #else
-    return intmoduleDMAFifo.pop(*byte);
+  return intmoduleDMAFifo.pop(*byte);
 #endif
 }
 
 static uint8_t dmaBuffer[512] __DMA;
-void intmoduleSendBufferDMA(uint8_t * data, uint8_t size)
+void intmoduleSendBufferDMA(uint8_t *data, uint8_t size)
 {
-  if (IS_PXX_PROTOCOL(s_current_protocol[INTERNAL_MODULE]) || IS_FLYSKY_PROTOCOL(s_current_protocol[INTERNAL_MODULE])) {
-    if (size > 0 && size < 512) {
+  // compiler workround
+  uint8_t fivetwelf = 512;
+  //
+
+  if (IS_PXX_PROTOCOL(s_current_protocol[INTERNAL_MODULE]) || IS_FLYSKY_PROTOCOL(s_current_protocol[INTERNAL_MODULE]))
+  {
+    if (size > 0 && size < fivetwelf)
+    {
 #if !defined(SIMU)
-      for (int idx = 0; idx < size; idx++) {
-          dmaBuffer[idx] = data[idx];
+      for (int idx = 0; idx < size; idx++)
+      {
+        dmaBuffer[idx] = data[idx];
       }
 #endif
       DMA_InitTypeDef DMA_InitStructure;
@@ -228,9 +239,9 @@ void intmoduleSendBufferDMA(uint8_t * data, uint8_t size)
 
 void intmoduleSendNextFrame()
 {
-    uint8_t * data = modulePulsesData[INTERNAL_MODULE].pxx_uart.pulses;
-    uint8_t size = modulePulsesData[INTERNAL_MODULE].pxx_uart.ptr - data;
-    intmoduleSendBufferDMA(data, size);
+  uint8_t *data = modulePulsesData[INTERNAL_MODULE].pxx_uart.pulses;
+  uint8_t size = modulePulsesData[INTERNAL_MODULE].pxx_uart.ptr - data;
+  intmoduleSendBufferDMA(data, size);
 }
 
 extern "C" void INTMODULE_TIMER_IRQHandler()
@@ -246,4 +257,3 @@ extern "C" void INTMODULE_TIMER_IRQHandler()
 
   DEBUG_TIMER_STOP(debugTimerIntPulsesDuration);
 }
-

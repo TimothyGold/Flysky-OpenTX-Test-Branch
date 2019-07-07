@@ -350,7 +350,9 @@ MigrationBackup/
 
 # Visual Studio Code
 .vs/
+.VS/
 .vscode/
+.VSCODE/
 
 # further Adds
 out/
