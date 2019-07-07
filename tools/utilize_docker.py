@@ -50,7 +50,7 @@ output_filename = "firmware"
 output_extension = ".bin"
 
 # Maximum size for the compiled firmware
-nv14_max_size = 65536 * 8
+nv14_max_size = 256 * 8
 
 # Default NV14 cmake flags
 nv14_default_options = OrderedDict([
