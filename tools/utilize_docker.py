@@ -227,17 +227,13 @@ binsize = os.stat(output_path).st_size
 
 # Print out the file name and size
 info("Build completed in {0:.1f} seconds.".format((end-start)))
-info("Firmware file: %s" % (output_path))
+header("Firmware file: %s" % (output_path))
 
-# TODO: I really need to fix that
-info("Firmware size: {0:.2f}KB ({1:.2f}%)".format(
-    binsize/1024, float(binsize)/float(nv14_max_size)))
 
 # Exit with an error if the firmware is too big
-# if binsize > max_size:
-#    print("ERROR: Firmware is too large for radio.")
-#    print("")
-#    exit(1)
-
-# Exit with success result code
-header("Firmware successfully built. Now find and flash your file.")
+if (binsize / 1024) > nv14_max_size:
+     error("ERROR: Firmware is too large for radio.")
+else:
+    header("Built successfully!")
+    info("Firmware size: {0:.2f}KB ({1:.2f}%)".format(
+    binsize/1024, ((float(binsize) / 1024) * 100 ) / float(nv14_max_size)))

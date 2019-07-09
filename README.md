@@ -51,11 +51,10 @@ The syntax is `-e "CMAKE_FLAGS=SWITCH01=VALUE01 SWITCH02=VALUE02"`.
 Defaults will be overwritten or created.
 
 ### Examples
+
 1. Build from the source in `X:/Github/Flysky-OpenTX-Test-Branch` and enable `HELI`:
 
    `docker run --rm -it -v "X:/Github/Flysky-OpenTX-Test-Branch:/nv14-build" -e "CMAKE_FLAGS=HELI=YES" derdoktor667/nv14-build`
-
----
 
 ### Native
 
