@@ -37,7 +37,7 @@ extern "C"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
 #endif
-#if !defined(LUA_EXPORT_GENERATION)
+
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/misc.h"
 #include "STM32F4xx_DSP_StdPeriph_Lib_V1.4.0/Libraries/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_adc.h"
@@ -95,10 +95,10 @@ extern "C"
 
 #define MB *1024 * 1024
 #define LUA_MEM_EXTRA_MAX \
-  (2 MB)  // max allowed memory usage for Lua bitmaps (in bytes)
-#define LUA_MEM_MAX \
-  (6 MB)  // max allowed memory usage for complete Lua  (in bytes), 0 means
-          // unlimited
+  (2 MB) // max allowed memory usage for Lua bitmaps (in bytes)
+#define LUA_MEM_MAX                                                        \
+  (6 MB) // max allowed memory usage for complete Lua  (in bytes), 0 means \
+         // unlimited
 
 // HSI is at 168Mhz (over-drive is not enabled!)
 #define PERI1_FREQUENCY 42000000
@@ -140,7 +140,7 @@ extern "C"
 
 // CPU Unique ID
 #define LEN_CPU_UID (3 * 8 + 2)
-void getCPUUniqueID(char* s);
+void getCPUUniqueID(char *s);
 
 // SD driver
 #define BLOCK_SIZE 512 /* Block Size in Bytes */
@@ -167,8 +167,8 @@ uint32_t sdMounted(void);
 
 #if defined(DISK_CACHE)
 #include "diskio.h"
-DRESULT __disk_read(BYTE drv, BYTE* buff, DWORD sector, UINT count);
-DRESULT __disk_write(BYTE drv, const BYTE* buff, DWORD sector, UINT count);
+DRESULT __disk_read(BYTE drv, BYTE *buff, DWORD sector, UINT count);
+DRESULT __disk_write(BYTE drv, const BYTE *buff, DWORD sector, UINT count);
 #else
 #define __disk_read disk_read
 #define __disk_write disk_write
@@ -228,7 +228,8 @@ void init_trainer_capture(void);
 void stop_trainer_capture(void);
 
 // Keys driver
-enum EnumKeys {
+enum EnumKeys
+{
   KEY_ENTER,
   KEY_EXIT,
   KEY_PGUP,
@@ -260,7 +261,8 @@ enum EnumKeys {
 #define IS_SHIFT_KEY(index) (false)
 #define IS_SHIFT_PRESSED() (false)
 
-enum VirtualKeys {
+enum VirtualKeys
+{
   VKEY_MIN,
   VKEY_MAX,
   VKEY_INC,
@@ -270,7 +272,8 @@ enum VirtualKeys {
   VKEY_DEFAULT,
 };
 
-enum LUATouchEvent {
+enum LUATouchEvent
+{
   TOUCH_DOWN = 1,
   TOUCH_UP,
   TOUCH_SLIDE_UP,
@@ -279,7 +282,8 @@ enum LUATouchEvent {
   TOUCH_SLIDE_RIGHT,
 };
 
-enum EnumSwitches {
+enum EnumSwitches
+{
   SW_SA,
   SW_SB,
   SW_SC,
@@ -297,7 +301,8 @@ enum EnumSwitches {
       (SWITCH_TOGGLE << 8) + (SWITCH_2POS << 6) + (SWITCH_TOGGLE << 4) + \
       (SWITCH_3POS << 2) + (SWITCH_2POS << 0);
 
-enum EnumSwitchesPositions {
+enum EnumSwitchesPositions
+{
   SW_SA0,
   SW_SA1,
   SW_SA2,
@@ -327,7 +332,8 @@ enum EnumSwitchesPositions {
 
 #define STORAGE_NUM_SWITCHES_POSITIONS (STORAGE_NUM_SWITCHES * 3)
 
-enum EnumPowerupState {
+enum EnumPowerupState
+{
   BOARD_POWER_OFF = 0xCAFEDEAD,
   BOARD_POWER_ON = 0xDEADBEEF,
   BOARD_STARTED = 0xBAADF00D,
@@ -411,7 +417,7 @@ enum Analogs
 #define NUM_SUB_ANALOGS 2
 #define DEFAULT_POTS_CONFIG   \
   (POT_WITHOUT_DETENT << 0) + \
-      (POT_WITHOUT_DETENT << 2)  // 2 pots without detent
+      (POT_WITHOUT_DETENT << 2) // 2 pots without detent
 
 enum CalibratedAnalogs
 {
@@ -440,12 +446,12 @@ extern uint16_t adcValues[NUM_ANALOGS];
 void adcInit(void);
 void adcRead(void);
 uint16_t getAnalogValue(uint8_t index);
-uint16_t getBatteryVoltage();   // returns current battery voltage in 10mV steps
-uint16_t getBattery2Voltage();  // returns current battery voltage in 10mV steps
+uint16_t getBatteryVoltage();  // returns current battery voltage in 10mV steps
+uint16_t getBattery2Voltage(); // returns current battery voltage in 10mV steps
 
-#define BATTERY_WARN 37  // 3.7V
-#define BATTERY_MIN 36   // 3.6V
-#define BATTERY_MAX 42   // 4.1V
+#define BATTERY_WARN 37 // 3.7V
+#define BATTERY_MIN 36  // 3.6V
+#define BATTERY_MAX 42  // 4.1V
 
 #if defined(__cplusplus) && !defined(SIMU)
 extern "C"
@@ -497,8 +503,8 @@ extern "C"
 #define lcdOff() backlightEnable(0) /* just disable the backlight */
 #define lcdSetRefVolt(...)
 #define lcdRefreshWait(...)
-void lcdStoreBackupBuffer(void);
-int lcdRestoreBackupBuffer(void);
+  void lcdStoreBackupBuffer(void);
+  int lcdRestoreBackupBuffer(void);
 
   // Backlight driver
   void backlightInit(void);
@@ -540,7 +546,7 @@ void backlightEnable(uint8_t dutyCycle);
 void audioInit(void);
 void audioConsumeCurrentBuffer(void);
 void Audio_Sine_Test(void);
-void audioSpiWriteBuffer(const uint8_t* buffer, uint32_t size);
+void audioSpiWriteBuffer(const uint8_t *buffer, uint32_t size);
 void audioSpiSetSpeed(uint8_t speed);
 uint8_t audioHardReset(void);
 uint8_t audioSoftReset(void);
