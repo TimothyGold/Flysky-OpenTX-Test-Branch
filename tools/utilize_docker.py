@@ -37,7 +37,8 @@ if not sys.version_info >= (3, 6):
     error("* Requires Python 3.6+.")
 
 # Show a header
-header('* Nirvana NV14 - https://cloud.docker.com/repository/docker/derdoktor667/nv14-build *')
+header('===========================  Nirvana NV14  ===========================')
+header('* https://cloud.docker.com/repository/docker/derdoktor667/nv14-build *')
 
 # Specify some paths for the build
 base_dir = os.getcwd()
@@ -51,7 +52,7 @@ output_filename = "firmware"
 output_extension = ".bin"
 
 # Maximum size for the compiled firmware
-nv14_max_size = 2048
+nv14_max_size = ( 2 * 1024 * 1024 ) # 2048
 
 # Default NV14 cmake flags
 nv14_default_options = OrderedDict([
@@ -65,6 +66,7 @@ nv14_default_options = OrderedDict([
     ("LUA_COMPILER", "YES"),
     ("SIMU_AUDIO", "NO"),
     ("SIMU_LUA_COMPILER", "NO"),
+    ("USB_SERIAL", "YES"),
     ("MODULE_R9M_FULLSIZE", "YES"),
     ("MULTIMODULE", "YES"),
     ("AUTOSWITCH", "YES"),
@@ -229,11 +231,9 @@ binsize = os.stat(output_path).st_size
 info("Build completed in {0:.1f} seconds.".format((end-start)))
 header("Firmware file: %s" % (output_path))
 
-
 # Exit with an error if the firmware is too big
-if (binsize / 1024) > nv14_max_size:
+if binsize > nv14_max_size:
      error("ERROR: Firmware is too large for radio.")
 else:
-    header("Built successfully!")
-    info("Firmware size: {0:.2f}KB ({1:.2f}%)".format(
-    binsize/1024, ((float(binsize) / 1024) * 100 ) / float(nv14_max_size)))
+    header("Built successfully!") 
+    info("Firmware size: {0}KB ({1:.0%})".format(binsize/1024, float(binsize)/float(nv14_max_size)))

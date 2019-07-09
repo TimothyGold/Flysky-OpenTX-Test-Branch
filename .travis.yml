@@ -1,5 +1,6 @@
 dist: trusty
 sudo: true
+
 language: cpp
 
 services: docker
@@ -8,8 +9,7 @@ notifications:
   email: false
 
 before_install:
-#  - sudo ln -s /Flysky-OpenTX-Test-Branch /nv14-build
-   - sudo git clone https://github.com/derdoktor667/Flysky-OpenTX-Test-Branch /nv14-build
+   - sudo git clone --recursive https://github.com/derdoktor667/Flysky-OpenTX-Test-Branch /nv14-build
 
 install:
   - docker build -t derdoktor667/nv14-build ${TRAVIS_BUILD_DIR}
