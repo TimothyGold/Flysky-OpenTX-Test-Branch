@@ -1,10 +1,10 @@
-# This is for building firmware for the Nirvana NV14 Radio forked from the Flysky-OpenTX-Test-Branch project and maintained without any support.
+# This is for building firmware for the Nirvana NV14 Radio forked from the Flysky-OpenTX-Test-Branch project and maintained without any support
 
 ## WARNING: ...not an official branch ...do NOT use
 
 ---
 
-## This is a playground for all new functions, gadgets or options from all sources I can find and adapt
+## This is a playground for all new functions, gadgets or options from all sources I can find and adapt. Be sure to always use an official firmware for flying in real world. Maybe you could try the OLDEST available build
 
 ---
 

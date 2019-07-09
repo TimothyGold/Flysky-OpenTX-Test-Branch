@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 from __future__ import print_function
 import os
 import sys
@@ -7,7 +8,7 @@ import shutil
 import time
 from collections import OrderedDict
 
-# some tools
+# some tools and colors
 def error(str):
     print('\n' + '\033[41m' + str + '\033[0m' + '\n')
     sys.exit(1)
@@ -50,7 +51,7 @@ output_filename = "firmware"
 output_extension = ".bin"
 
 # Maximum size for the compiled firmware
-nv14_max_size = 256 * 8
+nv14_max_size = 2048
 
 # Default NV14 cmake flags
 nv14_default_options = OrderedDict([
@@ -227,6 +228,8 @@ binsize = os.stat(output_path).st_size
 # Print out the file name and size
 info("Build completed in {0:.1f} seconds.".format((end-start)))
 info("Firmware file: %s" % (output_path))
+
+# TODO: I really need to fix that
 info("Firmware size: {0:.2f}KB ({1:.2f}%)".format(
     binsize/1024, float(binsize)/float(nv14_max_size)))
 
