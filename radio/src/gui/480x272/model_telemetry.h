@@ -18,28 +18,35 @@
  * GNU General Public License for more details.
  */
 
-#ifndef _MODEL_TELEMETRY_H
-#define _MODEL_TELEMETRY_H
+#pragma once
 
+#include <sstream>
+#include <string>
 #include "tabsgroup.h"
 
-class ModelTelemetryPage: public PageTab {
-  public:
-    ModelTelemetryPage();
+using namespace std;
 
-    virtual void build(Window * window) override
-    {
-      build(window, -1);
-    }
+namespace std {
+template <typename T>
+std::string to_string(const T& n) {
+  std::ostringstream stm;
+  stm << n;
+  return stm.str();
+}
+}  // namespace std
 
-    void checkEvents() override;
+class ModelTelemetryPage : public PageTab {
+ public:
+  ModelTelemetryPage();
 
-  protected:
-    Window * window = nullptr;
-    void editSensor(Window * window, uint8_t index);
-    int lastKnownIndex = 0;
-    void build(Window * window, int8_t focusSensorIndex=-1);
-    void rebuild(Window * window, int8_t focusSensorIndex=-1);
+  virtual void build(Window* window) override { build(window, -1); }
+
+  void checkEvents() override;
+
+ protected:
+  Window* window = nullptr;
+  void editSensor(Window* window, uint8_t index);
+  int lastKnownIndex = 0;
+  void build(Window* window, int8_t focusSensorIndex = -1);
+  void rebuild(Window* window, int8_t focusSensorIndex = -1);
 };
-
-#endif //_MODEL_TELEMETRY_H

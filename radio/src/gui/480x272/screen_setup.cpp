@@ -22,7 +22,7 @@
 #include "widgets_setup.h"
 #include "opentx.h"
 #include "libwindows.h"
-
+#include "model_telemetry.h" // ...just searching the bad
 
 ScreenSetupPage::ScreenSetupPage(uint8_t index, bool inited) :
   ZoneOptionPage("Main view " + std::to_string(index + 1), ICON_THEME_VIEW1 + index),

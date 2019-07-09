@@ -615,7 +615,7 @@ void LCD_ILI9481_Off( void )
 unsigned int LCD_ILI9481_ReadID( void )
 {
   int ID = 0;
-  int Data;
+  int Data = 0;
 
   /* Have a issue here */
   return 0;
@@ -1709,5 +1709,3 @@ void lcdNextLayer()
     LCD_SetLayer(LCD_FIRST_LAYER);
   }
 }
-
-

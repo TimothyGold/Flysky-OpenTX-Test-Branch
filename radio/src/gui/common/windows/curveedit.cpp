@@ -20,13 +20,13 @@
 
 #include "curveedit.h"
 #include "keyboard_curve.h"
-#include "opentx.h"  // TODO for applyCustomCurve
+#include "opentx.h"
 
-CurveEdit::CurveEdit(Window *parent, const rect_t &rect, uint8_t index)
-    : Curve(parent, rect,
-            [=](int x) -> int { return applyCustomCurve(x, index); }),
-      index(index),
-      current(0) {
+CurveEdit::CurveEdit(Window *parent, const rect_t &rect, uint8_t index) : Curve(parent, rect, [=](int x) -> int {
+                                                                            return applyCustomCurve(x, index);
+                                                                          }),
+                                                                          index(index), current(0)
+{
   update();
 }
 
@@ -95,7 +95,8 @@ void CurveEdit::next() {
   update();
 }
 
-void CurveEdit::previous() {
+void CurveEdit::previous()
+{
   if (current == 0)
     current = points.size();
   else

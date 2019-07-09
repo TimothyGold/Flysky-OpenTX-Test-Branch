@@ -298,7 +298,7 @@ typedef const int8_t pm_int8_t;
 
 #include "debug.h"
 
-#if defined(PCBTARANIS) || defined(PCBHORUS)
+#if defined(PCBTARANIS) || defined(PCBHORUS) || defined(PCBNV14)
 #define SWSRC_THR SWSRC_SB2
 #define SWSRC_GEA SWSRC_SG2
 #define SWSRC_ID0 SWSRC_SA0
@@ -493,7 +493,7 @@ uint8_t channel_order(uint8_t x);
        : (g_eeGeneral.splashMode <= 0 ? (400 - g_eeGeneral.splashMode * 200) \
                                       : (400 - g_eeGeneral.splashMode * 100)))
 #else
-#define SPLASH_TIMEOUT (4 * 100)  // 4 seconds
+#define SPLASH_TIMEOUT (5 * 100)  // 4 seconds
 #endif
 
 #if defined(ROTARY_ENCODERS)
@@ -1327,6 +1327,8 @@ void checkBattery();
 void opentxClose(uint8_t shutdown = true);
 void opentxInit();
 void opentxResume();
+
+extern void pwrSoftReboot();
 
 #if defined(STATUS_LEDS)
 #define LED_ERROR_BEGIN() ledRed()

@@ -359,3 +359,7 @@ out/
 cmake-build-*/
 build*/
 /debian/
+.vs/
+.vscode/
+*/__pycache__/
+*.pyc
