@@ -21,7 +21,7 @@ RUN echo "dash dash/sh boolean false" | debconf-set-selections && dpkg-reconfigu
 # enlight heavy docker image
 # RUN apt-get -y update && apt-get -y dist-upgrade && apt-get -y install apt-utils build-essential cmake gcc git lib32ncurses6 lib32z1 libfox-1.6-dev libsdl1.2-dev qt5-default qtmultimedia5-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev software-properties-common wget zip python-pip python-pil libgtest-dev git ruby-dev gcc-arm-none-eabi
 
-  RUN apt-get -y update && apt-get -y dist-upgrade && apt-get -y install apt-utils build-essential cmake gcc git lib32ncurses6 libfox-1.6-dev gcc-arm-none-eabi
+  RUN apt-get -y update && apt-get -y dist-upgrade && apt-get -y install apt-utils build-essential cmake gcc git lib32ncurses6 libfox-1.6-dev gcc-arm-none-eabi python3 python-pil
 
 # smaller image
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
