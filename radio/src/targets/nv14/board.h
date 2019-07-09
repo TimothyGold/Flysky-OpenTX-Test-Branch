@@ -94,11 +94,8 @@ extern "C"
 #define FIRMWARE_ADDRESS 0x08000000
 
 #define MB *1024 * 1024
-#define LUA_MEM_EXTRA_MAX \
-  (2 MB) // max allowed memory usage for Lua bitmaps (in bytes)
-#define LUA_MEM_MAX                                                        \
-  (6 MB) // max allowed memory usage for complete Lua  (in bytes), 0 means \
-         // unlimited
+#define LUA_MEM_EXTRA_MAX  (2 MB) // max allowed memory usage for Lua bitmaps (in bytes)
+#define LUA_MEM_MAX (6 MB) // max allowed memory usage for complete Lua  (in bytes), 0 means unlimited
 
 // HSI is at 168Mhz (over-drive is not enabled!)
 #define PERI1_FREQUENCY 42000000
