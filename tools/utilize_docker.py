@@ -236,4 +236,4 @@ if binsize > nv14_max_size:
      error("ERROR: Firmware is too large for radio.")
 else:
     header("Built successfully!") 
-    info("Firmware size: {0:.2f}KB ({1:.2f}%)".format(binsize/1024, float(binsize)/float(nv14_max_size)))
+    info("Firmware size: {0:.2f} KB ({1:.2f} %)".format(binsize / 1024, ((float(binsize) * 100) / float(nv14_max_size))))
