@@ -21,7 +21,6 @@
 #include "board.h"
 #include "pwr.h"
 
-
 uint32_t powerupReason
     __NOINIT;  // Stores power up reason beyond initialization for emergency
                // mode activation
@@ -75,9 +74,7 @@ void pwrOn() {
   boardState = BOARD_POWER_ON;
 }
 
-void pwrSoftReboot() {
-  boardState = BOARD_REBOOT;
-}
+void pwrSoftReboot() { boardState = BOARD_REBOOT; }
 
 void pwrOff() {
   // Shutdown the Haptic
@@ -98,8 +95,13 @@ void pwrResetHandler() {
   __ASM volatile("nop");
   __ASM volatile("nop");
 
+  if (boardState != BOARD_POWER_OFF) {
+    powerupReason =
+        boardState != BOARD_REBOOT && WAS_RESET_BY_WATCHDOG_OR_SOFTWARE()
+            ? DIRTY_SHUTDOWN
             : ~DIRTY_SHUTDOWN;
     RCC->CSR |= RCC_CSR_RMVF;  // clear all flags
   } else {
     powerupReason = ~DIRTY_SHUTDOWN;
+  }
 }
