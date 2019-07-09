@@ -77,7 +77,6 @@ void pwrOn() {
 
 void pwrSoftReboot() {
   boardState = BOARD_REBOOT;
-  NVIC_SystemReset();
 }
 
 void pwrOff() {
@@ -99,13 +98,8 @@ void pwrResetHandler() {
   __ASM volatile("nop");
   __ASM volatile("nop");
 
-  if (boardState != BOARD_POWER_OFF) {
-    powerupReason =
-        boardState != BOARD_REBOOT && WAS_RESET_BY_WATCHDOG_OR_SOFTWARE()
-            ? DIRTY_SHUTDOWN
             : ~DIRTY_SHUTDOWN;
     RCC->CSR |= RCC_CSR_RMVF;  // clear all flags
   } else {
     powerupReason = ~DIRTY_SHUTDOWN;
-  }
 }

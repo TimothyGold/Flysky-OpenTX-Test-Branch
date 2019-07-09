@@ -79,8 +79,106 @@ protected:
 
     if (cstate == LS_FAMILY_BOOL || cstate == LS_FAMILY_STICKY)
     {
-      new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V1);
-      auto choice = new SwitchChoice(logicalSwitchOneWindow, grid.getFieldSlot(), SWSRC_FIRST_IN_LOGICAL_SWITCHES, SWSRC_LAST_IN_LOGICAL_SWITCHES, GET_SET_DEFAULT(cs->v1));
+      GridLayout grid;
+      logicalSwitchOneWindow->clear();
+
+      LogicalSwitchData * cs = lswAddress(ls);
+      uint8_t cstate = lswFamily(cs->func);
+
+      if (cstate == LS_FAMILY_BOOL || cstate == LS_FAMILY_STICKY) {
+        new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V1);
+        auto choice = new SwitchChoice(logicalSwitchOneWindow, grid.getFieldSlot(), SWSRC_FIRST_IN_LOGICAL_SWITCHES, SWSRC_LAST_IN_LOGICAL_SWITCHES, GET_SET_DEFAULT(cs->v1));
+        choice->setAvailableHandler(isSwitchAvailableInLogicalSwitches);
+        grid.nextLine();
+
+        new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V2);
+        choice = new SwitchChoice(logicalSwitchOneWindow, grid.getFieldSlot(), SWSRC_FIRST_IN_LOGICAL_SWITCHES, SWSRC_LAST_IN_LOGICAL_SWITCHES, GET_SET_DEFAULT(cs->v2));
+        choice->setAvailableHandler(isSwitchAvailableInLogicalSwitches);
+        grid.nextLine();
+      }
+      else if (cstate == LS_FAMILY_EDGE) {
+        new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V1);
+        auto choice = new SwitchChoice(logicalSwitchOneWindow, grid.getFieldSlot(), SWSRC_FIRST_IN_LOGICAL_SWITCHES, SWSRC_LAST_IN_LOGICAL_SWITCHES, GET_SET_DEFAULT(cs->v1));
+        choice->setAvailableHandler(isSwitchAvailableInLogicalSwitches);
+        grid.nextLine();
+
+        auto edit1 = new NumberEdit(logicalSwitchOneWindow, grid.getFieldSlot(2, 0), -129, 122, GET_DEFAULT(cs->v2));
+        auto edit2 = new NumberEdit(logicalSwitchOneWindow, grid.getFieldSlot(2, 1), -1, 222 - cs->v2, GET_SET_DEFAULT(cs->v3));
+        edit1->setSetValueHandler([=](int32_t newValue) {
+          cs->v2 = newValue;
+          cs->v3 = min<uint8_t>(cs->v3, 222 - cs->v2);
+          SET_DIRTY();
+          edit2->setMax(222 - cs->v2);
+          edit2->invalidate();
+        });
+        edit1->setDisplayHandler([](BitmapBuffer * dc, LcdFlags flags, int32_t value) {
+          drawNumber(dc, 2, 2, lswTimerValue(value), flags | PREC1);
+        });
+        edit2->setDisplayHandler([=](BitmapBuffer * dc, LcdFlags flags, int32_t value) {
+          if (value < 0)
+            dc->drawText(2, 2, "<<", flags);
+          else if (value == 0)
+            dc->drawText(2, 2, "--", flags);
+          else
+            drawNumber(dc, 2, 2, lswTimerValue(cs->v2 + value), flags | PREC1);
+        });
+        grid.nextLine();
+      }
+      else if (cstate == LS_FAMILY_COMP) {
+        new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V1);
+        new SourceChoice(logicalSwitchOneWindow, grid.getFieldSlot(), 0, MIXSRC_LAST_TELEM, GET_SET_DEFAULT(cs->v1));
+        grid.nextLine();
+
+        new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V2);
+        new SourceChoice(logicalSwitchOneWindow, grid.getFieldSlot(), 0, MIXSRC_LAST_TELEM, GET_SET_DEFAULT(cs->v2));
+        grid.nextLine();
+      }
+      else if (cstate == LS_FAMILY_TIMER) {
+        new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V1);
+        auto timer = new NumberEdit(logicalSwitchOneWindow, grid.getFieldSlot(), -128, 122, GET_SET_DEFAULT(cs->v1));
+        timer->setDisplayHandler([](BitmapBuffer * dc, LcdFlags flags, int32_t value) {
+          drawNumber(dc, 2, 2, lswTimerValue(value), flags | PREC1);
+        });
+        grid.nextLine();
+
+        new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V2);
+        timer = new NumberEdit(logicalSwitchOneWindow, grid.getFieldSlot(), -128, 122, GET_SET_DEFAULT(cs->v2));
+        timer->setDisplayHandler([](BitmapBuffer * dc, LcdFlags flags, int32_t value) {
+          drawNumber(dc, 2, 2, lswTimerValue(value), flags | PREC1);
+        });
+        grid.nextLine();
+      }
+      else {
+        new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V1);
+        new SourceChoice(logicalSwitchOneWindow, grid.getFieldSlot(), 0, MIXSRC_LAST_TELEM, GET_DEFAULT(cs->v1),
+                         [=](int32_t newValue) {
+                           cs->v1 = newValue;
+                           SET_DIRTY();
+                           int16_t min = 0, max = 0;
+                           LcdFlags flags = 0;
+                           getMixSrcRange(cs->v1, min, max, &flags);
+                           v2Edit->setMin(min);
+                           v2Edit->setMax(max);
+						   v2Edit->setLcdFlags(flags);
+                           v2Edit->invalidate();
+                         });
+        grid.nextLine();
+
+        new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_V2);
+        int16_t v2_min = 0, v2_max = 0;
+        LcdFlags flags = 0;
+        getMixSrcRange(cs->v1, v2_min, v2_max, &flags);
+
+        v2Edit = new NumberEdit(logicalSwitchOneWindow, grid.getFieldSlot(), v2_min, v2_max, GET_SET_DEFAULT(cs->v2), flags);
+        v2Edit->setDisplayHandler([=](BitmapBuffer * dc, LcdFlags flags, int32_t value) {
+          drawSourceCustomValue(2, 2, cs->v1, (cs->v1 <= MIXSRC_LAST_CH ? calc100toRESX(value) : value), flags);
+        });
+        grid.nextLine();
+      }
+
+      // AND switch
+      new StaticText(logicalSwitchOneWindow, grid.getLabelSlot(), STR_AND_SWITCH);
+      auto choice = new SwitchChoice(logicalSwitchOneWindow, grid.getFieldSlot(), -MAX_LS_ANDSW, MAX_LS_ANDSW, GET_SET_DEFAULT(cs->andsw));
       choice->setAvailableHandler(isSwitchAvailableInLogicalSwitches);
       grid.nextLine();
 

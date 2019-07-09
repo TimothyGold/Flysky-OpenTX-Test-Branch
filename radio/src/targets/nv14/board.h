@@ -462,13 +462,13 @@ extern "C"
 #if defined(PCBFLYSKY)
   uint32_t lowPowerCheck(void);
 #endif
-  uint8_t UsbModeSelect(uint32_t index);
-  void pwrOn(void);
-  void pwrSoftReboot();
-  void pwrOff(void);
-  void pwrResetHandler(void);
-  uint32_t pwrPressed(void);
-  uint32_t pwrPressedDuration(void);
+uint8_t UsbModeSelect( uint32_t index );
+void pwrOn(void);
+void pwrSoftReboot();
+void pwrOff(void);
+void pwrResetHandler(void);
+uint32_t pwrPressed(void);
+uint32_t pwrPressedDuration(void);
 #if defined(SIMU) || defined(NO_UNEXPECTED_SHUTDOWN)
 #define UNEXPECTED_SHUTDOWN() (false)
 #else
