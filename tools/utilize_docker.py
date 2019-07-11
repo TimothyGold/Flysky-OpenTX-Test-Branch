@@ -62,8 +62,8 @@ output_dir_name = "/firmware_built"
 output_extension = ".bin"
 output_filename = "firmware"
 
-source_dir = base_dir
 base_dir = os.getcwd()
+source_dir = base_dir
 build_dir = (source_dir + build_dir_name)
 output_dir = (source_dir + output_dir_name)
 
