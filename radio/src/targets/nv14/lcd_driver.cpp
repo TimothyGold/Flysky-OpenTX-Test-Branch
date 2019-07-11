@@ -615,10 +615,11 @@ void LCD_ILI9481_Off( void )
 unsigned int LCD_ILI9481_ReadID( void )
 {
   int ID = 0;
-  int Data = 0;
+  int Data;
 
-  /* Have a issue here */
-  return 0;
+  // dirty
+  Data = 0;
+  return Data;
 
   lcdWriteByte( 0, 0xBF );
 

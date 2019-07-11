@@ -175,7 +175,7 @@ void hall_stick_init(uint32_t baudrate)
 
 void HallSendBuffer(uint8_t * buffer, uint32_t count)
 {
-  for(int idx = 0; buffer != HallCmd && idx < count; idx++)
+  for(uint32_t idx = 0; buffer != HallCmd && idx < count; idx++)
   {
     HallCmd[idx] = buffer[idx];
   }
