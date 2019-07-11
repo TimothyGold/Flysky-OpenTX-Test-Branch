@@ -62,10 +62,10 @@ output_dir_name = "/firmware_built"
 output_extension = ".bin"
 output_filename = "firmware"
 
+source_dir = base_dir
 base_dir = os.getcwd()
 build_dir = (source_dir + build_dir_name)
 output_dir = (source_dir + output_dir_name)
-source_dir = base_dir
 
 # Maximum size for the compiled firmware
 nv14_max_size = ( 2 * 1024 * 1024 ) # 2MB - 2.097.152‬ byte
