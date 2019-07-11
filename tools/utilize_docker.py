@@ -1,3 +1,18 @@
+#
+# Copyright (C) wir-sind-die-matrix.de
+#
+# License GPLv2: http://www.gnu.org/licenses/gpl-2.0.html
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+
 #!/usr/bin/env python
 
 from __future__ import print_function
@@ -41,18 +56,19 @@ header('===========================  Nirvana NV14  ===========================')
 header('* https://cloud.docker.com/repository/docker/derdoktor667/nv14-build *')
 
 # Specify some paths for the build
-base_dir = os.getcwd()
-source_dir = base_dir
 build_dirty = "../"
 build_dir_name = "/buildit"
 output_dir_name = "/firmware_built"
+output_extension = ".bin"
+output_filename = "firmware"
+
+base_dir = os.getcwd()
 build_dir = (source_dir + build_dir_name)
 output_dir = (source_dir + output_dir_name)
-output_filename = "firmware"
-output_extension = ".bin"
+source_dir = base_dir
 
 # Maximum size for the compiled firmware
-nv14_max_size = ( 2 * 1024 * 1024 ) # 2048
+nv14_max_size = ( 2 * 1024 * 1024 ) # 2MB - 2.097.152‬ byte
 
 # Default NV14 cmake flags
 nv14_default_options = OrderedDict([
@@ -82,7 +98,7 @@ nv14_default_options = OrderedDict([
 # , "FR", "SE", "IT", "CZ", "DE", "PT", "ES", "PL", "NL")
 available_languages = ("EN")
 
-# Check that the source is valid
+# Ensure the source is valid
 workbench_folder = build_dir
 
 if not os.path.exists(source_dir + "/CMakeLists.txt"):
@@ -143,17 +159,9 @@ for ext_opt, ext_value in extra_options.items():
 # Start the timer
 start = time.time()
 
-# create the build directory
+# create the build directory and enter
 if not os.path.exists(build_dir):
     os.mkdir(build_dir)
-
-# else:
-    # os.chdir(build_dir)
-    # cleanBuildFolder = subprocess.Popen(["make", "clean"])
-    # cleanBuildFolder.wait()
-    # Exit if errored
-    # if cleanBuildFolder.returncode != 0:
-    #    error("WARNING: clean up build folder failed.")
 
 os.chdir(build_dir)
 
@@ -175,10 +183,9 @@ for opt, value in extra_command_options.items():
 buildCommand.append(build_dirty)
 
 # Output the cmake command line
-info(" ".join(buildCommand))
+info("".join(buildCommand))
 
 # Launch cmake
-print(" ")
 proc = subprocess.Popen(buildCommand)
 proc.wait()
 
@@ -186,7 +193,7 @@ proc.wait()
 if proc.returncode != 0:
     error("ERROR: cmake configuration failed.")
 
-# Launch make with two threads
+# Launch make
 proc = subprocess.Popen(["make", "firmware"])
 proc.wait()
 
@@ -202,6 +209,7 @@ output_filename = output_filename + "-" + default_options["PCB"].lower()
 
 # Get the firmware version
 stampfile = "radio/src/stamp.h"
+
 for line in open(stampfile):
     if "#define VERSION " in line:
         firmware_version = line.split()[2].replace('"', '')
@@ -222,7 +230,7 @@ output_filename = output_filename + output_extension
 output_path = os.path.join(output_dir, output_filename)
 
 # Move the new binary to the output path
-cp("firmware.bin", output_path)
+mv("firmware.bin", output_path)
 
 # Get the size of the binary
 binsize = os.stat(output_path).st_size
@@ -234,6 +242,9 @@ header("Firmware file: %s" % (output_path))
 # Exit with an error if the firmware is too big
 if binsize > nv14_max_size:
      error("ERROR: Firmware is too large for radio.")
+
+# all went right ...well done
 else:
     header("Built successfully!") 
     info("Firmware size: {0:.2f} KB ({1:.2f} %)".format(binsize / 1024, ((float(binsize) * 100) / float(nv14_max_size))))
+    header('======================================================================')

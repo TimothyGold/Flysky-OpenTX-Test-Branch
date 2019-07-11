@@ -18,123 +18,123 @@
  * GNU General Public License for more details.
  */
 
-#include "opentx.h"
 #include "dialog.h"
-// #include "mainWindow.h"
+#include "opentx.h"
+#include "view_main.h"
 
 const char *warningText = NULL;
 const char *warningInfoText;
-uint8_t     warningInfoLength;
-uint8_t     warningType;
-uint8_t     warningResult = 0;
-uint8_t     warningInfoFlags = ZCHAR;
-int16_t     warningInputValue;
-int16_t     warningInputValueMin;
-int16_t     warningInputValueMax;
-void        (*popupFunc)(event_t event) = NULL;
+uint8_t warningInfoLength;
+uint8_t warningType;
+uint8_t warningResult = 0;
+uint8_t warningInfoFlags = ZCHAR;
+int16_t warningInputValue;
+int16_t warningInputValueMin;
+int16_t warningInputValueMax;
+void (*popupFunc)(event_t event) = NULL;
 const char *popupMenuItems[POPUP_MENU_MAX_LINES];
-uint8_t     s_menu_item = 0;
-uint16_t    popupMenuNoItems = 0;
-uint16_t    popupMenuOffset = 0;
-uint8_t     popupMenuOffsetType = MENU_OFFSET_INTERNAL;
-void        (*popupMenuHandler)(const char * result);
+uint8_t s_menu_item = 0;
+uint16_t popupMenuNoItems = 0;
+uint16_t popupMenuOffset = 0;
+uint8_t popupMenuOffsetType = MENU_OFFSET_INTERNAL;
+void (*popupMenuHandler)(const char *result);
 
-#define ALERT_FRAME_TOP           70
-#define ALERT_FRAME_PADDING       10
-#define ALERT_BITMAP_PADDING      15
-#define ALERT_TITLE_LEFT          135
-#define ALERT_TITLE_LINE_HEIGHT   30
-#define ALERT_MESSAGE_TOP         210
-#define ALERT_ACTION_TOP          230
-#define ALERT_BUTTON_TOP          300
+#define ALERT_FRAME_TOP 70
+#define ALERT_FRAME_PADDING 10
+#define ALERT_BITMAP_PADDING 15
+#define ALERT_TITLE_LEFT 135
+#define ALERT_TITLE_LINE_HEIGHT 30
+#define ALERT_MESSAGE_TOP 210
+#define ALERT_ACTION_TOP 230
+#define ALERT_BUTTON_TOP 300
 
+MessageBox *activePopup = nullptr;
 
-MessageBox* activePopup = nullptr;
+void runPopupWarningBox() {}
 
-void runPopupWarningBox()
-{
-}
+void drawMessageBox() {}
 
-void drawMessageBox()
-{
-}
-
-void drawAlertBox(const char * title, const char * text, const char * action)
-{
+void drawAlertBox(const char *title, const char *text, const char *action) {
   theme->drawBackground();
-  lcd->drawBitmap(ALERT_BITMAP_PADDING, ALERT_FRAME_TOP + ALERT_BITMAP_PADDING, theme->asterisk);
+  lcd->drawBitmap(ALERT_BITMAP_PADDING, ALERT_FRAME_TOP + ALERT_BITMAP_PADDING,
+                  theme->asterisk);
 
-  #if defined(TRANSLATIONS_FR) || defined(TRANSLATIONS_IT) || defined(TRANSLATIONS_CZ)
-  lcd->drawText(ALERT_TITLE_LEFT, ALERT_FRAME_TOP + ALERT_FRAME_PADDING, STR_WARNING, ALARM_COLOR|DBLSIZE);
-  lcd->drawText(ALERT_TITLE_LEFT, ALERT_FRAME_TOP + ALERT_FRAME_PADDING + ALERT_TITLE_LINE_HEIGHT, title, ALARM_COLOR|DBLSIZE);
-  #else
-  if(title != nullptr) lcd->drawText(ALERT_TITLE_LEFT, ALERT_FRAME_TOP + ALERT_FRAME_PADDING, title, ALARM_COLOR|DBLSIZE);
-  lcd->drawText(ALERT_TITLE_LEFT, ALERT_FRAME_TOP + ALERT_FRAME_PADDING + ALERT_TITLE_LINE_HEIGHT, STR_WARNING, ALARM_COLOR|DBLSIZE);
-  #endif
+#if defined(TRANSLATIONS_FR) || defined(TRANSLATIONS_IT) || \
+    defined(TRANSLATIONS_CZ)
+  lcd->drawText(ALERT_TITLE_LEFT, ALERT_FRAME_TOP + ALERT_FRAME_PADDING,
+                STR_WARNING, ALARM_COLOR | DBLSIZE);
+  lcd->drawText(ALERT_TITLE_LEFT,
+                ALERT_FRAME_TOP + ALERT_FRAME_PADDING + ALERT_TITLE_LINE_HEIGHT,
+                title, ALARM_COLOR | DBLSIZE);
+#else
+  if (title != nullptr)
+    lcd->drawText(ALERT_TITLE_LEFT, ALERT_FRAME_TOP + ALERT_FRAME_PADDING,
+                  title, ALARM_COLOR | DBLSIZE);
+  lcd->drawText(ALERT_TITLE_LEFT,
+                ALERT_FRAME_TOP + ALERT_FRAME_PADDING + ALERT_TITLE_LINE_HEIGHT,
+                STR_WARNING, ALARM_COLOR | DBLSIZE);
+#endif
 
-  if(text != nullptr) lcd->drawText(ALERT_FRAME_PADDING+5, ALERT_MESSAGE_TOP, text, MIDSIZE);
+  if (text != nullptr)
+    lcd->drawText(ALERT_FRAME_PADDING + 5, ALERT_MESSAGE_TOP, text, MIDSIZE);
 }
 
-void showAlertBox(const char * title, const char * text, const char * action, uint8_t sound)
-{
-}
+void showAlertBox(const char *title, const char *text, const char *action,
+                  uint8_t sound) {}
 
-void showMessageBox(const char * title)
-{
+void showMessageBox(const char *title) {
   // drawMessageBox();
-  lcdDrawSizedText(WARNING_LINE_X, WARNING_LINE_Y, title, WARNING_LINE_LEN, DBLSIZE|WARNING_COLOR);
+  lcdDrawSizedText(WARNING_LINE_X, WARNING_LINE_Y, title, WARNING_LINE_LEN,
+                   DBLSIZE | WARNING_COLOR);
   lcdRefresh();
 }
 
-void runPopupWarning(event_t event)
-{
+void runPopupWarning(event_t event) {
   warningResult = false;
   switch (event) {
-  case EVT_KEY_BREAK(KEY_ENTER):
-  case EVT_VK(DialogResult::OK):
-  case EVT_VK(DialogResult::Yes):
-    warningResult = true;
-    // no break
-  case EVT_KEY_BREAK(KEY_EXIT):
-  case EVT_VK(DialogResult::No):
-  case EVT_VK(DialogResult::Cancel):
-    //if(activePopup!=nullptr) activePopup->deleteLater();
-    activePopup = nullptr;
-    warningText = nullptr;
-    warningType = WARN_TYPE_ASTERISK;
-    //action detected nothing more to be done
-    return;
+    case EVT_KEY_BREAK(KEY_ENTER):
+    case EVT_VK(DialogResult::OK):
+    case EVT_VK(DialogResult::Yes):
+      warningResult = true;
+      // no break
+    case EVT_KEY_BREAK(KEY_EXIT):
+    case EVT_VK(DialogResult::No):
+    case EVT_VK(DialogResult::Cancel):
+      // if(activePopup!=nullptr) activePopup->deleteLater();
+      activePopup = nullptr;
+      warningText = nullptr;
+      warningType = WARN_TYPE_ASTERISK;
+      // action detected nothing more to be done
+      return;
   }
-  if(warningText != nullptr){
-    if(activePopup == nullptr) {
+  if (warningText != nullptr) {
+    if (activePopup == nullptr) {
       DialogResult buttons = DialogResult::OK;
-      const char* title = STR_WARNING;
-      if(warningType != WARN_TYPE_ASTERISK) {
-        switch(warningType){
-        case WARN_TYPE_CONFIRM:
-          title = STR_PRESS_ENTER_TO_CONFIRM;
-          break;
-        case WARN_TYPE_INFO:
-        case WARN_TYPE_INPUT:
-        case WARN_TYPE_ALERT:
-          title = STR_ALERT;
-          break;
+      const char *title = STR_WARNING;
+      if (warningType != WARN_TYPE_ASTERISK) {
+        switch (warningType) {
+          case WARN_TYPE_CONFIRM:
+            title = STR_PRESS_ENTER_TO_CONFIRM;
+            break;
+          case WARN_TYPE_INFO:
+          case WARN_TYPE_INPUT:
+          case WARN_TYPE_ALERT:
+            title = STR_ALERT;
+            break;
         }
         buttons = (DialogResult)(buttons | DialogResult::Cancel);
       }
-      activePopup = new MessageBox((DialogType)warningType, buttons, title, warningText);
+      activePopup =
+          new MessageBox((DialogType)warningType, buttons, title, warningText);
       activePopup->setCloseHandler([=]() {
         activePopup = nullptr;
         warningText = nullptr;
         warningType = WARN_TYPE_ASTERISK;
       });
-    }
-    else {
+    } else {
       activePopup->setMessage(warningText);
     }
   }
 }
 
-const char * runPopupMenu(event_t event)
-{
-}
+const char *runPopupMenu(event_t event) { return 0; }
