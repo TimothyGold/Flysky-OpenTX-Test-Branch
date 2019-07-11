@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _HAL_H_
-#define _HAL_H_
 
 /* Timers Allocation:
  * TIM1 = Haptic
@@ -396,11 +394,11 @@
 #define TRAINER_TIMER_FREQ              (PERI1_FREQUENCY * TIMER_MULT_APB1)
 #define TRAINER_GPIO_AF                 GPIO_AF_TIM4 // TIM4_CH1 (in) + TIM4_CH2 (out)
 #define TRAINER_OUT_DMA                 DMA1
-// #define TRAINER_OUT_DMA_CHANNEL         DMA_Channel_2
-// #define TRAINER_OUT_DMA_STREAM          DMA1_Stream3
-// #define TRAINER_OUT_DMA_IRQn            DMA1_Stream3_IRQn
-//#define TRAINER_OUT_DMA_IRQHandler      DMA1_Stream3_IRQHandler
-// #define TRAINER_OUT_DMA_FLAG_TC         DMA_IT_TCIF3
+#define TRAINER_OUT_DMA_CHANNEL         DMA_Channel_2
+#define TRAINER_OUT_DMA_STREAM          DMA1_Stream3
+#define TRAINER_OUT_DMA_IRQn            DMA1_Stream3_IRQn
+#define TRAINER_OUT_DMA_IRQHandler      DMA1_Stream3_IRQHandler
+#define TRAINER_OUT_DMA_FLAG_TC         DMA_IT_TCIF3
 #define TRAINER_EXTMODULE_TIMER_IRQn    TIM4_IRQn
 #define TRAINER_EXTMODULE_TIMER_IRQHandler  TIM4_IRQHandler
 #define TRAINER_EXTMODULE_TIMER_FREQ    (PERI1_FREQUENCY * TIMER_MULT_APB1)
@@ -445,5 +443,3 @@
 #define BT_EN_GPIO GPIOG
 #define BT_EN_GPIO_PIN GPIO_Pin_10  // PG.10
 #endif
-
-#endif // _HAL_H_
