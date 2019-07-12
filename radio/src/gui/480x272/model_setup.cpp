@@ -243,7 +243,7 @@ class ModuleWindow : public Window {
           update();
           moduleChoice->setFocus();
         });
-    moduleChoice->setAvailableHandler([=](int8_t moduleType) {
+    moduleChoice->setAvailableHandler([=](moduleType) {
       return isModuleTypeAllowed(moduleIndex, moduleType);
     });
 
