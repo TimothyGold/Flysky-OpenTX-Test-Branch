@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _DEFINITIONS_H_
-#define _DEFINITIONS_H_
 
 #include <inttypes.h>
 
@@ -110,5 +108,3 @@ typedef const int8_t pm_int8_t;
 #if !defined(CPUAVR) || defined(SIMU)
 #define PROGMEM
 #endif
-
-#endif // _DEFINITIONS_H_

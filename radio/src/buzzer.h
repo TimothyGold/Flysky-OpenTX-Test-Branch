@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _BUZZER_H_
-#define _BUZZER_H_
 
 #if defined(BUZZER)
 extern uint8_t g_beepCnt;
@@ -171,5 +169,3 @@ inline void BUZZER_HEARTBEAT()
 #define BUZZER_HEARTBEAT()
 #endif // BUZZER
 #endif // CPUARM
-
-#endif // _BUZZER_H_

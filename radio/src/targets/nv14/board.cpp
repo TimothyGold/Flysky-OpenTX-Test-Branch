@@ -187,33 +187,21 @@ void boardInit()
   init2MhzTimer();
   init1msTimer();
   uint32_t pwr_press_time = 0;
-  if(UNEXPECTED_SHUTDOWN()) pwrOn();
-  backlightInit();
-  lcdInit();
-  while (boardState == BOARD_POWER_OFF)
-  {
-    if (pwrPressed())
-    {
-      if (pwr_press_time == 0)
-      {
-         pwr_press_time = get_tmr10ms();
-      }
-      if ((get_tmr10ms() - pwr_press_time) > POWER_ON_DELAY)
-      {
-          pwrOn();
-      }
-    }
-    else
-    {
-       pwr_press_time = 0;
-       handle_battery_charge();
-    }   
+  if (UNEXPECTED_SHUTDOWN()) pwrOn();
+
+  while (boardState == BOARD_POWER_OFF) {
+    if (pwrPressed()) {
+      if (pwr_press_time == 0) pwr_press_time = get_tmr10ms();
+      if ((get_tmr10ms() - pwr_press_time) > POWER_ON_DELAY) pwrOn();
+    } else
+      pwr_press_time = 0;
+    handle_battery_charge();
   }
 
   keysInit();
   audioInit();
-  // we need to initialize g_FATFS_Obj here, because it is in .ram section (because of DMA access)
-  // and this section is un-initialized
+  // we need to initialize g_FATFS_Obj here, because it is in .ram section
+  // (because of DMA access) and this section is un-initialized
   memset(&g_FATFS_Obj, 0, sizeof(g_FATFS_Obj));
   monitorInit();
   adcInit();
@@ -226,14 +214,18 @@ void boardInit()
   hapticInit();
   TouchInit();
   boardState = BOARD_STARTED;
-//#if defined(BLUETOOTH)
-//  bluetoothInit(BLUETOOTH_DEFAULT_BAUDRATE);
-//#endif
 #if defined(DEBUG)
-  DBGMCU_APB1PeriphConfig(DBGMCU_IWDG_STOP|DBGMCU_TIM1_STOP|DBGMCU_TIM2_STOP|DBGMCU_TIM3_STOP|DBGMCU_TIM4_STOP|DBGMCU_TIM5_STOP|DBGMCU_TIM6_STOP|DBGMCU_TIM7_STOP|DBGMCU_TIM8_STOP|DBGMCU_TIM9_STOP|DBGMCU_TIM10_STOP|DBGMCU_TIM11_STOP|DBGMCU_TIM12_STOP|DBGMCU_TIM13_STOP|DBGMCU_TIM14_STOP, ENABLE);
+  DBGMCU_APB1PeriphConfig(
+      DBGMCU_IWDG_STOP | DBGMCU_TIM1_STOP | DBGMCU_TIM2_STOP |
+          DBGMCU_TIM3_STOP | DBGMCU_TIM4_STOP | DBGMCU_TIM5_STOP |
+          DBGMCU_TIM6_STOP | DBGMCU_TIM7_STOP | DBGMCU_TIM8_STOP |
+          DBGMCU_TIM9_STOP | DBGMCU_TIM10_STOP | DBGMCU_TIM11_STOP |
+          DBGMCU_TIM12_STOP | DBGMCU_TIM13_STOP | DBGMCU_TIM14_STOP,
+      ENABLE);
 #endif
 #endif
 }
+
 
 
 void boardOff()

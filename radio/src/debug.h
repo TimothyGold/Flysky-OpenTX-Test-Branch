@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _DEBUG_H_
-#define _DEBUG_H_
 
 #include <inttypes.h>
 #include "rtc.h"
@@ -406,6 +404,3 @@ extern const char * const debugTimerNames[DEBUG_TIMERS_COUNT];
 #if !defined(SIMU)
 extern uint32_t debugCounter1ms;
 #endif
-
-#endif // _DEBUG_H_
-

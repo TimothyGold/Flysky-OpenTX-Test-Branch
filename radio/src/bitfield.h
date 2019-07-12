@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -19,9 +20,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef BITFIELD_H
-#define BITFIELD_H
 
 // A set of bitfield handling macros
 #define BF_BIT(n)                  ( 1<<(n) )
@@ -48,4 +46,3 @@
 #define BF_SET(y, x, start, len)    \
     ( y= ((y) &~ BF_MASK(start, len)) | BF_PREP(x, start, len) )
 
-#endif //BITFIELD_H

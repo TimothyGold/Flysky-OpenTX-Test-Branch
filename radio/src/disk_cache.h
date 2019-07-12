@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _DISK_CACHE_H_
-#define _DISK_CACHE_H_
 
 #include "diskio.h"
 #include "sdio_sd.h"
@@ -70,5 +68,3 @@ class DiskCache
 };
 
 extern DiskCache diskCache;
-
-#endif // _DISK_CACHE_H_

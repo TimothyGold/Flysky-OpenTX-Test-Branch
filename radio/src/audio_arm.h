@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _AUDIO_ARM_H_
-#define _AUDIO_ARM_H_
 
 #include <stddef.h>
 #include "ff.h"
@@ -647,5 +645,3 @@ void referenceSystemAudioFiles();
 void referenceModelAudioFiles();
 
 bool isAudioFileReferenced(uint32_t i, char * filename/*at least AUDIO_FILENAME_MAXLEN+1 long*/);
-
-#endif // _AUDIO_ARM_H_

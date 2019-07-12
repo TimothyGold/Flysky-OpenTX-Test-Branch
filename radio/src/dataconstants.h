@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _DATACONSTANTS_H_
-#define _DATACONSTANTS_H_
 
 #define NUM_STICKS                     4
 
@@ -1029,5 +1027,3 @@ enum BluetoothModes {
   BLUETOOTH_TELEMETRY,
   BLUETOOTH_TRAINER,
 };
-
-#endif // _DATACONSTANTS_H_

@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _AUDIO_AVR_H_
-#define _AUDIO_AVR_H_
 
 #if defined(PCBSTD)
   #define speakerOn()      buzzerOn()
@@ -154,5 +152,3 @@ void audioTimerCountdown(uint8_t timer, int value);
 #define PLAY_LOGICAL_SWITCH_ON(sw)
 #define PLAY_MODEL_NAME()
 #define START_SILENCE_PERIOD()
-
-#endif // _AUDIO_AVR_H_

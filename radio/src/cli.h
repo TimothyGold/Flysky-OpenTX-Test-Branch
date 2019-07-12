@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -18,9 +19,6 @@
  * GNU General Public License for more details.
  */
 
-#ifndef _CLI_H_
-#define _CLI_H_
-
 #include "serial.h"
 
 extern uint8_t cliTracesEnabled;
@@ -37,5 +35,3 @@ extern TaskStack<CLI_STACK_SIZE> cliStack;
 void cliStart();
 void cliStackPaint();
 uint32_t cliStackFree();
-
-#endif // _CLI_H_

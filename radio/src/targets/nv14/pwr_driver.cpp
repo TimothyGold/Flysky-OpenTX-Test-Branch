@@ -21,9 +21,7 @@
 #include "board.h"
 #include "pwr.h"
 
-uint32_t powerupReason
-    __NOINIT;  // Stores power up reason beyond initialization for emergency
-               // mode activation
+uint32_t powerupReason __NOINIT;  // Stores power up reason beyond initialization for emergency mode activation
 uint32_t boardState __NOINIT;
 
 void pwrInit() {
@@ -34,12 +32,6 @@ void pwrInit() {
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_Init(PWR_GPIO, &GPIO_InitStructure);
-
-  // TODO move this elsewhere!
-  // Init Module PWR
-  // GPIO_ResetBits(INTMODULE_PWR_GPIO, INTMODULE_PWR_GPIO_PIN);
-  // GPIO_InitStructure.GPIO_Pin = INTMODULE_PWR_GPIO_PIN;
-  // GPIO_Init(INTMODULE_PWR_GPIO, &GPIO_InitStructure);
 
   // TODO move this elsewhere!
   GPIO_ResetBits(EXTMODULE_PWR_GPIO, EXTMODULE_PWR_GPIO_PIN);
@@ -61,11 +53,6 @@ void pwrInit() {
   GPIO_InitStructure.GPIO_Pin = SD_PRESENT_GPIO_PIN;
   GPIO_Init(SD_PRESENT_GPIO, &GPIO_InitStructure);
 
-  // TODO move this elsewhere! (plus SD DETECT on other boards)
-  // Init TRAINER DETECT PIN
-  // GPIO_InitStructure.GPIO_Pin = TRAINER_DETECT_GPIO_PIN;
-  // GPIO_Init(TRAINER_DETECT_GPIO, &GPIO_InitStructure);
-
   boardState = BOARD_POWER_OFF;
 }
 
@@ -74,7 +61,10 @@ void pwrOn() {
   boardState = BOARD_POWER_ON;
 }
 
-void pwrSoftReboot() { boardState = BOARD_REBOOT; }
+void pwrSoftReboot() { 
+  boardState = BOARD_REBOOT;
+  NVIC_SystemReset();
+}
 
 void pwrOff() {
   // Shutdown the Haptic

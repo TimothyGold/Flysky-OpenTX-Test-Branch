@@ -8,8 +8,11 @@ services: docker
 notifications:
   email: false
 
+git:
+  quiet: true
+
 before_install:
-   - sudo git clone --recursive https://github.com/derdoktor667/Flysky-OpenTX-Test-Branch /nv14-build
+   - sudo git clone --recursive --branch ${TRAVIS_BRANCH} https://github.com/derdoktor667/Flysky-OpenTX-Test-Branch /nv14-build
 
 # ...to speed up travisci let dockerhub supply the image
 install:

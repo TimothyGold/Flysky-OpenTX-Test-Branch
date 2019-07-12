@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -20,7 +21,7 @@
 
 enum BluetoothStates
 {
-#if defined(PCBX9E) && !defined(PCBNV14)
+#if defined(PCBX9E)
     BLUETOOTH_INIT,
     BLUETOOTH_WAIT_TTM,
     BLUETOOTH_WAIT_BAUDRATE_CHANGE,
