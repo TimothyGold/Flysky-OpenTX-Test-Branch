@@ -22,36 +22,35 @@
 #if defined(__cplusplus) && !defined(SIMU)
 extern "C" {
 #endif
-#include "usb_dcd_int.h"
 #include "usb_bsp.h"
+#include "usb_dcd_int.h"
 #if defined(__cplusplus) && !defined(SIMU)
 }
 #endif
 
-void watchdogInit(unsigned int duration)
-{
-  IWDG->KR = 0x5555;      // Unlock registers
-  IWDG->PR = 3;           // Divide by 32 => 1kHz clock
-  IWDG->KR = 0x5555;      // Unlock registers
-  IWDG->RLR = duration;   // 1.5 seconds nominal
-  IWDG->KR = 0xAAAA;      // reload
-  IWDG->KR = 0xCCCC;      // start
+void watchdogInit(unsigned int duration) {
+  IWDG->KR = 0x5555;     // Unlock registers
+  IWDG->PR = 3;          // Divide by 32 => 1kHz clock
+  IWDG->KR = 0x5555;     // Unlock registers
+  IWDG->RLR = duration;  // 1.5 seconds nominal
+  IWDG->KR = 0xAAAA;     // reload
+  IWDG->KR = 0xCCCC;     // start
 }
 
 // Start TIMER7 at 2000000Hz
-void init2MhzTimer()
-{
-  TIMER_2MHz_TIMER->PSC = (PERI1_FREQUENCY * TIMER_MULT_APB1) / 2000000 - 1; // 0.5 uS, 2 MHz
+void init2MhzTimer() {
+  TIMER_2MHz_TIMER->PSC =
+      (PERI1_FREQUENCY * TIMER_MULT_APB1) / 2000000 - 1;  // 0.5 uS, 2 MHz
   TIMER_2MHz_TIMER->ARR = 65535;
   TIMER_2MHz_TIMER->CR2 = 0;
   TIMER_2MHz_TIMER->CR1 = TIM_CR1_CEN;
 }
 
 // Starts TIMER at 1000Hz
-void init1msTimer()
-{
-  INTERRUPT_xMS_TIMER->ARR = 999; // 1mS in uS
-  INTERRUPT_xMS_TIMER->PSC = (PERI1_FREQUENCY * TIMER_MULT_APB1) / 1000000 - 1;  // 1uS
+void init1msTimer() {
+  INTERRUPT_xMS_TIMER->ARR = 999;  // 1mS in uS
+  INTERRUPT_xMS_TIMER->PSC =
+      (PERI1_FREQUENCY * TIMER_MULT_APB1) / 1000000 - 1;  // 1uS
   INTERRUPT_xMS_TIMER->CCER = 0;
   INTERRUPT_xMS_TIMER->CCMR1 = 0;
   INTERRUPT_xMS_TIMER->EGR = 0;
@@ -62,9 +61,8 @@ void init1msTimer()
 }
 
 // TODO use the same than board_sky9x.cpp
-void interrupt1ms()
-{
-  static uint8_t pre_scale;       // Used to get 10 Hz counter
+void interrupt1ms() {
+  static uint8_t pre_scale;  // Used to get 10 Hz counter
 
   ++pre_scale;
 
@@ -79,17 +77,17 @@ void interrupt1ms()
     DEBUG_TIMER_STOP(debugTimerHaptic);
   }
 #endif
-#if !defined(SIMU) && defined (FLYSKY_HALL_STICKS)
-    if (boardState == BOARD_STARTED)// && 0 == pre_scale%3)
-    {
-      hall_stick_loop();
-    }
+#if !defined(SIMU) && defined(FLYSKY_HALL_STICKS)
+  if (boardState == BOARD_STARTED)  // && 0 == pre_scale%3)
+  {
+    hall_stick_loop();
+  }
 #endif
   if (pre_scale == 10) {
     pre_scale = 0;
 #if !defined(SIMU)
     if (boardState == BOARD_STARTED) {
-        TouchDriver();
+      TouchDriver();
     }
 #endif
     DEBUG_TIMER_START(debugTimerPer10ms);
@@ -102,8 +100,7 @@ void interrupt1ms()
   DEBUG_TIMER_STOP(debugTimerRotEnc);
 }
 
-extern "C" void INTERRUPT_xMS_IRQHandler()
-{
+extern "C" void INTERRUPT_xMS_IRQHandler() {
   INTERRUPT_xMS_TIMER->SR &= ~TIM_SR_UIF;
   interrupt1ms();
   DEBUG_INTERRUPT(INT_1MS);
@@ -113,70 +110,52 @@ extern "C" void INTERRUPT_xMS_IRQHandler()
 extern "C" void initialise_monitor_handles();
 #endif
 
-
-void delay_self(int count)
-{
-   for (int i = 50000; i > 0; i--)
-   {
-       for (; count > 0; count--);
-   }
+void delay_self(int count) {
+  for (int i = 50000; i > 0; i--) {
+    for (; count > 0; count--)
+      ;
+  }
 }
 
-void boardInit()
-{
+void boardInit() {
 #if defined(SEMIHOSTING)
   initialise_monitor_handles();
 #endif
 
 #if !defined(SIMU)
-  RCC_AHB1PeriphClockCmd(PWR_RCC_AHB1Periph |
-                         LCD_RCC_AHB1Periph |
-                         BACKLIGHT_RCC_AHB1Periph |
-                         SD_RCC_AHB1Periph |
-                         SDRAM_RCC_AHB1Periph |
-                         AUDIO_RCC_AHB1Periph |
-                         MONITOR_RCC_AHB1Periph |
-                         KEYS_RCC_AHB1Periph |
-                         ADC_RCC_AHB1Periph |
-                         AUX_SERIAL_RCC_AHB1Periph |
-                         TELEMETRY_RCC_AHB1Periph |
-                         TRAINER_RCC_AHB1Periph | 
-                         //BT_RCC_AHB1Periph |
-                         AUDIO_RCC_AHB1Periph |
-                         HAPTIC_RCC_AHB1Periph |
-                         INTMODULE_RCC_AHB1Periph |
-                         INTMODULE_RCC_AHB1Periph|
-                         EXTMODULE_RCC_AHB1Periph,
-                         ENABLE);
+  RCC_AHB1PeriphClockCmd(
+      PWR_RCC_AHB1Periph | LCD_RCC_AHB1Periph | BACKLIGHT_RCC_AHB1Periph |
+          SD_RCC_AHB1Periph | SDRAM_RCC_AHB1Periph | AUDIO_RCC_AHB1Periph |
+          MONITOR_RCC_AHB1Periph | KEYS_RCC_AHB1Periph | ADC_RCC_AHB1Periph |
+          AUX_SERIAL_RCC_AHB1Periph | TELEMETRY_RCC_AHB1Periph |
+          TRAINER_RCC_AHB1Periph |
+          // BT_RCC_AHB1Periph |
+          AUDIO_RCC_AHB1Periph | HAPTIC_RCC_AHB1Periph |
+          INTMODULE_RCC_AHB1Periph | INTMODULE_RCC_AHB1Periph |
+          EXTMODULE_RCC_AHB1Periph,
+      ENABLE);
 
-  RCC_AHB3PeriphClockCmd(SDRAM_RCC_AHB3Periph,
-                         ENABLE);
+  RCC_AHB3PeriphClockCmd(SDRAM_RCC_AHB3Periph, ENABLE);
 
-  RCC_APB1PeriphClockCmd(INTERRUPT_xMS_RCC_APB1Periph |
-                         TIMER_2MHz_RCC_APB1Periph |
-                         TELEMETRY_RCC_APB1Periph |
-                         TRAINER_RCC_APB1Periph |
-                         INTMODULE_RCC_APB1Periph |
-                         HALL_RCC_APB1Periph |
-                         EXTMODULE_RCC_APB1Periph |
-                         INTMODULE_RCC_APB1Periph_TIM3 |
-                         BACKLIGHT_RCC_APB1Periph,
-                         ENABLE);
+  RCC_APB1PeriphClockCmd(
+      INTERRUPT_xMS_RCC_APB1Periph | TIMER_2MHz_RCC_APB1Periph |
+          TELEMETRY_RCC_APB1Periph | TRAINER_RCC_APB1Periph |
+          INTMODULE_RCC_APB1Periph | HALL_RCC_APB1Periph |
+          EXTMODULE_RCC_APB1Periph | INTMODULE_RCC_APB1Periph_TIM3 |
+          BACKLIGHT_RCC_APB1Periph,
+      ENABLE);
 
-  RCC_APB2PeriphClockCmd(LCD_RCC_APB2Periph |
-                         ADC_RCC_APB2Periph |
-                         HAPTIC_RCC_APB2Periph |
-                         AUX_SERIAL_RCC_APB2Periph | 
-                         //BT_RCC_APB2Periph |
-                         //INTMODULE_RCC_APB2Periph |
-                         AUDIO_RCC_APB2Periph |
-                         EXTMODULE_RCC_APB2Periph,
+  RCC_APB2PeriphClockCmd(LCD_RCC_APB2Periph | ADC_RCC_APB2Periph |
+                             HAPTIC_RCC_APB2Periph | AUX_SERIAL_RCC_APB2Periph |
+                             // BT_RCC_APB2Periph |
+                             // INTMODULE_RCC_APB2Periph |
+                             AUDIO_RCC_APB2Periph | EXTMODULE_RCC_APB2Periph,
                          ENABLE);
 
   __enable_irq();
 
 #if defined(DEBUG)
-   auxSerialInit(0, 0); // default serial mode (None if DEBUG nm  ot defined)
+  auxSerialInit(0, 0);  // default serial mode (None if DEBUG nm  ot defined)
 #endif
   TRACE("\nNV14 board started :)");
   delay_ms(10);
@@ -188,14 +167,20 @@ void boardInit()
   init1msTimer();
   uint32_t pwr_press_time = 0;
   if (UNEXPECTED_SHUTDOWN()) pwrOn();
-
+  backlightInit();
+  lcdInit();
   while (boardState == BOARD_POWER_OFF) {
     if (pwrPressed()) {
-      if (pwr_press_time == 0) pwr_press_time = get_tmr10ms();
-      if ((get_tmr10ms() - pwr_press_time) > POWER_ON_DELAY) pwrOn();
-    } else
+      if (pwr_press_time == 0) {
+        pwr_press_time = get_tmr10ms();
+      }
+      if ((get_tmr10ms() - pwr_press_time) > POWER_ON_DELAY) {
+        pwrOn();
+      }
+    } else {
       pwr_press_time = 0;
-    handle_battery_charge();
+      handle_battery_charge();
+    }
   }
 
   keysInit();
@@ -214,6 +199,9 @@ void boardInit()
   hapticInit();
   TouchInit();
   boardState = BOARD_STARTED;
+//#if defined(BLUETOOTH)
+//  bluetoothInit(BLUETOOTH_DEFAULT_BAUDRATE);
+//#endif
 #if defined(DEBUG)
   DBGMCU_APB1PeriphConfig(
       DBGMCU_IWDG_STOP | DBGMCU_TIM1_STOP | DBGMCU_TIM2_STOP |
@@ -226,23 +214,19 @@ void boardInit()
 #endif
 }
 
-
-
-void boardOff()
-{
+void boardOff() {
   BACKLIGHT_DISABLE();
 
   while (pwrPressed()) {
     wdt_reset();
   }
   lcd->drawFilledRect(0, 0, LCD_WIDTH, LCD_HEIGHT, SOLID, HEADER_BGCOLOR);
-  SysTick->CTRL = 0; // turn off systick
+  SysTick->CTRL = 0;  // turn off systick
   pwrOff();
-#if defined(PCBFLYSKY) && !defined (SIMU)
-  haptic.event( AU_ERROR );
+#if defined(PCBFLYSKY) && !defined(SIMU)
+  haptic.event(AU_ERROR);
   delay_ms(50);
-  while(1)
-  {
+  while (1) {
     NVIC_SystemReset();
   }
 #endif
@@ -250,8 +234,7 @@ void boardOff()
 
 uint8_t currentTrainerMode = 0xff;
 
-void checkTrainerSettings()
-{
+void checkTrainerSettings() {
   uint8_t requiredTrainerMode = g_model.trainerMode;
   if (requiredTrainerMode != currentTrainerMode) {
     switch (currentTrainerMode) {

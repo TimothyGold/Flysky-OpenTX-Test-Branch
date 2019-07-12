@@ -106,7 +106,7 @@ void drawChargingInfo(uint16_t chargeState) {
                   BATTERY_CONNECTOR_H;
     battery_left = rand() % (LCD_W - BATTERY_W);
   } else {
-    progress += 25;
+    progress += 10;
   }
 
   if (CHARGE_STARTED == chargeState) {
