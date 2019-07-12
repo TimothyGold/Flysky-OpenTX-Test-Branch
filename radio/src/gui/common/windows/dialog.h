@@ -44,7 +44,7 @@ enum DialogResult {
 
 class Dialog : public Window {
   public:
-    Dialog(uint8_t type, std::string title, std::string message="", std::function<void(void)> onConfirm=nullptr, std::function<void(void)> onCancel=nullptr, bool cancellable = false);
+  Dialog(uint8_t type, std::string title, std::string message = "", std::function<void(void)> onConfirm = nullptr, std::function<void(void)> onCancel = nullptr);
 
     ~Dialog() override;
 

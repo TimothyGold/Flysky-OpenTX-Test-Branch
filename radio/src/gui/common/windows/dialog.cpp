@@ -36,7 +36,10 @@
 #define DIALOG_BUTTON_MARGIN      5
 #define MESSAGE_BOX_HEADER        30
 
-Dialog::Dialog(uint8_t type, std::string title, std::string message, std::function<void(void)> onConfirm, std::function<void(void)> onCancel, bool cancellable):
+Dialog::Dialog(uint8_t type, std::string title, std::string message,
+               std::function<void(void)> onConfirm,
+               std::function<void(void)> onCancel)
+    :
   Window(&mainWindow, {0, 0, LCD_W, LCD_H}, OPAQUE),
   type(type),
   title(std::move(title)),
@@ -49,17 +52,13 @@ Dialog::Dialog(uint8_t type, std::string title, std::string message, std::functi
         putEvent(EVT_VK(DialogResult::OK));
         return 0;
       });
-  if (cancellable){
-    new FabIconButton(this, 50, ALERT_BUTTON_TOP, ICON_BACK, [=]() -> uint8_t
-        {
-          deleteLater();
-          if (onCancel) onCancel();
-          putEvent(EVT_VK(DialogResult::Cancel));
-          return 0;
-        });
+  if (type == WARNING_TYPE_INPUT) {
+    new FabIconButton(this, 50, ALERT_BUTTON_TOP, ICON_BACK, [=]() -> uint8_t {
+      deleteLater();
+      if (onCancel) onCancel();
+      return 0;
+    });
   }
-  mainWindow.setTopMostWindow(this);
-
   bringToTop();
 }
 
@@ -113,7 +112,6 @@ void Dialog::checkEvents()
 {
   Window::checkEvents();
   if (closeCondition && closeCondition())
-    deleteLater();
 }
 
 void Dialog::deleteLater()
