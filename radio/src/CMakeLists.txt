@@ -468,10 +468,10 @@ set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_C_COMPILER> <FLAGS> <LINK_FLAGS> <OBJECTS>  
 set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET>")
 
 # Use the official way
-use_cxx11()  # ensure gnu++11 in CXX_FLAGS with 
+# use_cxx11()  # ensure gnu++11 in CXX_FLAGS with 
 
-# my way 
-#set (CMAKE_CXX_STANDARD 11)
+# update cmake 
+set (CMAKE_CXX_STANDARD 14)
 
 find_program(BASH bash HINTS "c:/cygwin/bin/" "c:/msys/bin/" DOC "bash shell for firmware size report (eg. c:/cygwin/bin/bash.exe on Windows).")
 
