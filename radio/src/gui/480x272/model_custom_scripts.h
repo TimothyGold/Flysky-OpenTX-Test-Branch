@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -18,9 +19,6 @@
  * GNU General Public License for more details.
  */
 
-#ifndef _MODEL_CUSTOM_SCRIPTS_H
-#define _MODEL_CUSTOM_SCRIPTS_H
-
 #include "tabsgroup.h"
 
 class ModelCustomScriptsPage: public PageTab {
@@ -38,5 +36,3 @@ protected:
     void rebuild(Window * window, int8_t focusIndex);
     void editCustomScript(Window * window, uint8_t lsIndex);
 };
-
-#endif //_MODEL_CUSTOM_SCRIPTS_H

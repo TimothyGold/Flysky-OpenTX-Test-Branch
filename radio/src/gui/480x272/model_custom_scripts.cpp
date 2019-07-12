@@ -131,7 +131,7 @@ class CostomScriptsEditWindow: public Page {
                                    });
           }
           else {
-              auto swicthchoice = new SourceChoice(window, grid.getFieldSlot(), 0, MIXSRC_LAST_TELEM, GET_SET_DEFAULT(g_model.scriptsData[cs].inputs[i].source));
+              auto switchchoice = new SourceChoice(window, grid.getFieldSlot(), 0, MIXSRC_LAST_TELEM, GET_SET_DEFAULT(g_model.scriptsData[cs].inputs[i].source));
           }
           grid.nextLine();
       }
@@ -178,7 +178,7 @@ class CustomScriptsButton : public Button {
     virtual void paint(BitmapBuffer * dc) override
     {
       LogicalSwitchData * cs = lswAddress(csIndex);
-      uint8_t lsFamily = lswFamily(cs->func);
+      // uint8_t lsFamily = lswFamily(cs->func);
       ScriptData &sd = g_model.scriptsData[csIndex];
 
       if (ZEXIST(sd.file)) {
