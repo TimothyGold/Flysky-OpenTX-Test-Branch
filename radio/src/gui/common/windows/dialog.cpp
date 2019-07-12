@@ -111,7 +111,7 @@ bool Dialog::onTouchEnd(coord_t x, coord_t y)
 void Dialog::checkEvents()
 {
   Window::checkEvents();
-  if (closeCondition && closeCondition())
+//  if (closeCondition && closeCondition())
 }
 
 void Dialog::deleteLater()
