@@ -12,8 +12,9 @@ before_install:
    - sudo git clone --recursive https://github.com/derdoktor667/Flysky-OpenTX-Test-Branch /nv14-build
 
 # ...to speed up travisci let dockerhub supply the image
-# install:
+install:
 # - docker build -t derdoktor667/nv14-build ${TRAVIS_BUILD_DIR}
+  - docker pull derdoktor667/nv14-build:latest
 
 before_script:
   - export -f travis_nanoseconds

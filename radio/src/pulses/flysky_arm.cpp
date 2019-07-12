@@ -379,7 +379,7 @@ bool isFlySkyUsbDownload(void)
   return rf_info.fw_state != 0;
 }
 
-void usbSetFrameTransmit(uint8_t packetID, uint8_t *dataBuf, uint32_t nBytes)
+void usbSetFrameTransmit(uint8_t packetID, uint8_t *dataBuf, int nBytes)
 {
     // send to host via usb
     uint8_t *pt = (uint8_t*)&rfProtocolRx;
@@ -733,7 +733,7 @@ void parseFlySkyFeedbackFrame(uint8_t port)
   uint8_t frame_type = *ptr++;
   uint8_t command_id = *ptr++;
   uint8_t first_para = *ptr++;
-  uint8_t * p_data = NULL;
+  // uint8_t * p_data = NULL;
 
   dataLen -= 2;
   if (!checkFlySkyFrameCrc(modulePulsesData[port].flysky.telemetry + 1, dataLen)) {
@@ -1060,7 +1060,7 @@ void usbDownloadTransmit(uint8_t *buffer, uint32_t size)
 {
     if (USB_SERIAL_MODE != getSelectedUsbMode()) return;
     buffer[0] = HALL_PROTOLO_HEAD;
-    for (int idx = 0; idx < size; idx++)
+    for (uint32_t idx = 0; idx < size; idx++)
     {
         usbSerialPutc(buffer[idx]);
     }
