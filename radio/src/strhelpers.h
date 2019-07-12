@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _STRHELPERS_H_
-#define _STRHELPERS_H_
 
 #include <inttypes.h>
 
@@ -50,5 +48,3 @@ char * getSwitchString(swsrc_t idx);
 char * getSwitchWarningString(swsrc_t idx);
 char * getCurveString(int idx);
 char * getTimerString(putstime_t tme, uint8_t hours);
-
-#endif // _STRHELPERS_H_

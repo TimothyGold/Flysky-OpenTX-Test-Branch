@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -18,10 +19,6 @@
  * GNU General Public License for more details.
  */
 
-#ifndef TOUCH_H
-#define TOUCH_H
-
-//#include "queue"
 #include "opentx_types.h"
 
 enum ENUM_TOUCH_EVENT
@@ -58,5 +55,3 @@ typedef struct
 
 #define SLIDE_RANGE                 ( 6 )
 #define MAX_TOUCH_EVENT_CNT         ( 10 )
-
-#endif // TOUCH_H

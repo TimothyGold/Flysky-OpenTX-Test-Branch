@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -18,9 +19,6 @@
  * GNU General Public License for more details.
  */
 
-#ifndef _SERIAL_H_
-#define _SERIAL_H_
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,6 +32,3 @@ void serialCrlf();
 #endif
 
 #define serialPrint(...) do { serialPrintf(__VA_ARGS__); serialCrlf(); } while(0)
-
-#endif // _SERIAL_H_
-

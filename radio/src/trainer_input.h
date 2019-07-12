@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _TRAINER_INPUT_H_
-#define _TRAINER_INPUT_H_
 
 #include "opentx.h"
 
@@ -69,5 +67,3 @@ inline void captureTrainerPulses(uint16_t capture)
     }
   }
 }
-
-#endif // _TRAINER_INPUT_H_

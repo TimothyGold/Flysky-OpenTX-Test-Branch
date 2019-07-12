@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _TASKS_ARM_H_
-#define _TASKS_ARM_H_
 
 #include "rtos.h"
 
@@ -56,5 +54,3 @@ inline void resetForcePowerOffRequest() {timeForcePowerOffPressed = 0; }
 extern RTOS_MUTEX_HANDLE mixerMutex;
 inline void pauseMixerCalculations() { RTOS_LOCK_MUTEX(mixerMutex); }
 inline void resumeMixerCalculations() { RTOS_UNLOCK_MUTEX(mixerMutex); }
-
-#endif // _TASKS_ARM_H_

@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef TOUCH_MANAGER_H
-#define TOUCH_MANAGER_H
 
 #include "board.h"
 #include "definitions.h"
@@ -424,5 +422,3 @@ class KeyEventEmulator
 
     static bool m_suspendKeyEvents;
 };
-
-#endif // TOUCH_MANAGER_H

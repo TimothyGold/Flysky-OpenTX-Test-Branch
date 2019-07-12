@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _SDCARD_H_
-#define _SDCARD_H_
 
 #include "ff.h"
 #include "translations.h"
@@ -162,5 +160,3 @@ bool sdListFiles(const char * path, const char * extension, const uint8_t maxlen
 
 bool isCwdAtRoot();
 FRESULT sdReadDir(DIR * dir, FILINFO * fno, bool & firstTime);
-
-#endif // _SDCARD_H_

@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -37,9 +38,6 @@
  *
  */
 
-#ifndef _TEMPLATES_H_
-#define _TEMPLATES_H_
-
 #include <inttypes.h>
 
 #define STK_RUD  1
@@ -76,7 +74,3 @@ enum Templates {
 void clearMixes();
 void clearCurves();
 void applyTemplate(uint8_t idx);
-
-#endif // _TEMPLATES_H_
-
-

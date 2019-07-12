@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _TRANSLATIONS_H_
-#define _TRANSLATIONS_H_
 
 // TODO really bad!!!
 #define NAVIGATION_MENUS
@@ -1168,5 +1166,3 @@ extern const pm_char STR_ABOUT_PARENTS_4[];
 #define CHR_TOGGLE TR_CHR_TOGGLE
 #define CHR_HOUR TR_CHR_HOUR
 #define CHR_INPUT TR_CHR_INPUT
-
-#endif  // _TRANSLATIONS_H_

@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -18,12 +19,8 @@
  * GNU General Public License for more details.
  */
 
-#ifndef _SBUS_H_
-#define _SBUS_H_
-
 #define SBUS_BAUDRATE         100000
 #define SBUS_FRAME_SIZE       25
 
+void processSbusFrame(uint8_t* sbus, int16_t* pulses, uint32_t size);
 void processSbusInput();
-
-#endif // _SBUS_H_

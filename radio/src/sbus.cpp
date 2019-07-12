@@ -36,7 +36,7 @@
 
 
 // Range for pulses (ppm input) is [-512:+512]
-void processSbusFrame(uint8_t * sbus, int16_t * pulses, uint32_t size)
+processSbusFrame(uint8_t * sbus, int16_t * pulses, uint32_t size)
 {
   if (size != SBUS_FRAME_SIZE || sbus[0] != SBUS_START_BYTE || sbus[SBUS_FRAME_SIZE-1] != SBUS_END_BYTE) {
     return; // not a valid SBUS frame

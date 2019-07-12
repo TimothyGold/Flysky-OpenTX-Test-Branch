@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef _TIMERS_H_
-#define _TIMERS_H_
 
 #define TMR_OFF      0
 #define TMR_RUNNING  1
@@ -65,5 +63,3 @@ void timerSet(int idx, int val);
 #endif
 
 void evalTimers(int16_t throttle, uint8_t tick10ms);
-
-#endif // _TIMERS_H_
