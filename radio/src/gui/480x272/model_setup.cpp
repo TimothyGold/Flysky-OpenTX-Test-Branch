@@ -225,7 +225,7 @@ class ModuleWindow : public Window {
 
   void update() {
     GridLayout grid;
-    uint8_t moduleType = g_model.moduleData[moduleIndex].type;
+    // uint8_t moduleType = g_model.moduleData[moduleIndex].type;
 
     clear();
 
@@ -243,7 +243,7 @@ class ModuleWindow : public Window {
           update();
           moduleChoice->setFocus();
         });
-    moduleChoice->setAvailableHandler([=](moduleType) {
+    moduleChoice->setAvailableHandler([=](uint8_t moduleType) {
       return isModuleTypeAllowed(moduleIndex, moduleType);
     });
 
