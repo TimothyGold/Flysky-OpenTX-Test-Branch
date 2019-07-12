@@ -65,6 +65,7 @@ uint16_t get_battery_charge_state() {
     if (finishedTime) finishedTime--;
   } else {
     noneTime++;
+    // if(noneTime>2)
     {
       if (finishedTime > 200)
         finishedTime -= 50;
@@ -105,7 +106,7 @@ void drawChargingInfo(uint16_t chargeState) {
                   BATTERY_CONNECTOR_H;
     battery_left = rand() % (LCD_W - BATTERY_W);
   } else {
-    progress += 10;
+    progress += 25;
   }
 
   if (CHARGE_STARTED == chargeState) {
@@ -171,11 +172,13 @@ void handle_battery_charge() {
 uint16_t getBatteryVoltage() {
   int32_t instant_vbat =
       anaIn(TX_VOLTAGE);  // using filtered ADC value on purpose
-  return (uint16_t)((instant_vbat * (1000 + g_eeGeneral.txVoltageCalibration)) / 2942);
+  return (uint16_t)((instant_vbat * (1000 + g_eeGeneral.txVoltageCalibration)) /
+                    2942);
 }
 
 uint16_t getBatteryVoltage2() {
   int32_t instant_vbat =
       anaIn(TX_VOLTAGE);  // using filtered ADC value on purpose
-  return (uint16_t)((instant_vbat * (1000 + g_eeGeneral.txVoltageCalibration)) / 2942);
+  return (uint16_t)((instant_vbat * (1000 + g_eeGeneral.txVoltageCalibration)) /
+                    2942);
 }
