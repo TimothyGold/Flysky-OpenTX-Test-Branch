@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,9 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-
-#ifndef __LCD_DRIVER_H__
-#define __LCD_DRIVER_H__
 
 #include "board.h"
 
@@ -124,8 +122,6 @@ extern void LCD_ST7796S_On( void );
 
 #define READ_LCD_DATA_PIN()           GPIO_ReadInputDataBit(PORT_LCD_MOSI, LCD_MOSI_PIN)
 
-
-
 #if 1
 #define HORIZONTAL_SYNC_WIDTH 			       ( 4 )
 #define HORIZONTAL_BACK_PORCH		               ( 24 )
@@ -141,11 +137,3 @@ extern void LCD_ST7796S_On( void );
 #define VERTICAL_BACK_PORCH  		               ( 6 )
 #define VERTICAL_FRONT_PORCH    	               ( 14 - VERTICAL_BACK_PORCH )
 #endif
-
-
-
-#endif
-
-
-
-

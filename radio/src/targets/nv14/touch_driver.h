@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -17,8 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-#ifndef __TOUCH_DRIVER_H__
-#define __TOUCH_DRIVER_H__
 
 #include "board.h"
 #include "touch.h"
@@ -82,5 +81,3 @@ enum ENUM_IO_MODE
 
 extern void TouchInit( void );
 extern void TouchDriver( void );
-
-#endif /*__TOUCH_DRIVER_H__*/

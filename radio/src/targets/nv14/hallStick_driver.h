@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -18,14 +19,6 @@
  * GNU General Public License for more details.
  */
 
-/***************************************************************************************************
-
-***************************************************************************************************/
-#ifndef      __HALLSTICK_DRIVER_H__
-    #define  __HALLSTICK_DRIVER_H__
-/***************************************************************************************************
-
-***************************************************************************************************/
     #ifdef      EXTERN
         #undef  EXTERN
     #endif
@@ -35,9 +28,7 @@
     #else
         #define EXTERN  extern
     #endif
-/***************************************************************************************************
 
-***************************************************************************************************/
 #define HALLSTICK_BUFF_SIZE             ( 512 )
 #define FLYSKY_HALL_BAUDRATE            ( 921600 )
 #define FLYSKY_HALL_CHANNEL_COUNT       ( 4 )
@@ -45,8 +36,6 @@
 #define MAX_ADC_CHANNEL_VALUE           ( 4095 )
 #define MIN_ADC_CHANNLE_VALUE           ( 0 )
 #define MIDDLE_ADC_CHANNLE_VALUE        ( 2047 )
-
-
 
 extern unsigned short HallChVal[FLYSKY_HALL_CHANNEL_COUNT];
 
@@ -185,10 +174,6 @@ enum TRANSFER_DIR_E {
 #define HALL_RX_DMA_Stream_IRQHandler     DMA1_Stream2_IRQHandler
 #define HALL_TX_DMA_Stream_IRQHandler     DMA1_Stream4_IRQHandler
 
-//#include "fifo.h"
-//extern Fifo<uint8_t, HALLSTICK_BUFF_SIZE> hallStickTxFifo;
-
-
 /***************************************************************************************************
                                          interface function
 ***************************************************************************************************/
@@ -202,20 +187,3 @@ unsigned short  calc_crc16(void *pBuffer,unsigned char BufferSize);
 void Parse_Character(STRUCT_HALL *hallBuffer, unsigned char ch);
 extern bool isFlySkyUsbDownload(void);
 extern void onFlySkyUsbDownloadStart(uint8_t fw_state);
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
