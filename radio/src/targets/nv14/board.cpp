@@ -19,6 +19,7 @@
  */
 
 #include "opentx.h"
+
 #if defined(__cplusplus) && !defined(SIMU)
 extern "C" {
 #endif
@@ -88,6 +89,7 @@ void interrupt1ms() {
 #if !defined(SIMU)
     if (boardState == BOARD_STARTED) {
       TouchDriver();
+      hall_stick_loop();
     }
 #endif
     DEBUG_TIMER_START(debugTimerPer10ms);
