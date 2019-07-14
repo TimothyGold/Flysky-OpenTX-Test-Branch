@@ -60,12 +60,15 @@ set(FIRMWARE_DEPENDENCIES ${FIRMWARE_DEPENDENCIES} ${BITMAPS_TARGET})
 
 add_definitions(-DSTM32F429_439xx -DSDRAM -DCOLORLCD -DLIBOPENUI -DHARDWARE_TOUCH)
 add_definitions(-DEEPROM_VARIANT=0 -DAUDIO -DVOICE -DRTCLOCK)
-# add_definitions(-DGPS_USART_BAUDRATE=${INTERNAL_GPS_BAUDRATE})
 add_definitions(-DPWR_BUTTON_${PWR_BUTTON})
 add_definitions(-DCROSSFIRE_NATIVE)
 add_definitions(-DWIDGETS_MISSING)
 add_definitions(-DFLYSKY_HALL_STICKS_REVERSE)
-#add_definitions(-DFLYSKY_AUTO_POWER_DOWN)
+
+if(NOT UNEXPECTED_SHUTDOWN)
+  add_definitions(-DNO_UNEXPECTED_SHUTDOWN)
+endif()
+
 remove_definitions(-DVARIO)
 
 include_directories(${RADIO_SRC_DIRECTORY}/fonts/480x272 gui/${GUI_DIR} gui/${GUI_DIR}/layouts)
