@@ -17,7 +17,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN echo "dash dash/sh boolean false" | debconf-set-selections && dpkg-reconfigure -p critical dash
 
 # soon this will be more "dockerish"
-RUN apt-get -y update && apt-get -y dist-upgrade && apt-get -y install apt-utils build-essential cmake gcc git lib32ncurses6 libfox-1.6-dev gcc-arm-none-eabi python3 python-pil googletest googletest-tools && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && apt-get autoclean -y && apt-get autoremove -y
+RUN apt-get -y update && apt-get -y dist-upgrade && apt-get -y install apt-utils build-essential curl cmake gcc git lib32ncurses6 libfox-1.6-dev gcc-arm-none-eabi python3 python-pil googletest googletest-tools libgtest-dev && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && apt-get autoclean -y && apt-get autoremove -y
 
 # repo tool
 ADD https://commondatastorage.googleapis.com/git-repo-downloads/repo /usr/local/bin/
