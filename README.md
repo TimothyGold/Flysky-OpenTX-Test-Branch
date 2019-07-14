@@ -2,17 +2,13 @@
 
 ## WARNING: ...not an official branch ...do NOT use
 
----
-
 ## This is a playground for all new functions, gadgets or options from all sources I can find and adapt. Be sure to always use an official firmware for flying in real world. Maybe you could try the OLDEST available build
 
----
-
-<img src="TravisCI-Mascot-2.png" width="75">
+![TravisLogo](/TravisCI-Mascot-2.png)
 
 [![Build Status](https://travis-ci.com/derdoktor667/Flysky-OpenTX-Test-Branch.svg?branch=derdoktor667%2Fnv14-rebuilding)](https://travis-ci.com/derdoktor667/Flysky-OpenTX-Test-Branch)
 
-## <u>This is not affiliated with Flysky / uFPV or anyone else.</u>
+**This is _not affiliated_ with Flysky / uFPV or anyone else.**
 
 You can use the included Dockerfile to create your own firmware.
 
@@ -26,7 +22,7 @@ You can use the included Dockerfile to create your own firmware.
 
 3. Pull the container:
 
-   `docker pull derdoktor667/nv14-build`
+   `docker pull derdoktor667/nv14-build:latest`
 
 4. Run the container, specifying the path to the repo as a mount volume:
 
@@ -40,7 +36,7 @@ The compiled firmware image will be placed in the build of the source directory 
 
 ### Languages
 
-Not working yet. <b><u>Only</u></b> English at the moment. 
+Not working yet. **Only** English at the moment.
 
 ### Changing the build flags
 
@@ -60,10 +56,8 @@ Defaults will be overwritten or created.
 
 Clone the repo, create a cmake workdir and try possible build command:
 
-`cmake -DGVARS=OFF -DLUA=ON -DLUA_COMPILER=ON -DPCB=NV14 -SIMU_AUDIO=OFF -DSIMU_LUA_COMPILER=OFF -DUSB_SERIAL=ON -DHELI=OFF -DMULTIMODULE=ON -DALLOW_NIGHTLY_BUILDS=ON -DAUTOSWITCH=ON -DAUTOSOURCE=ON -DGUI=YES -DBOOTLOADER=NO ../`
-
-...all good??? ...finally run "make firmware" and cross fingers.
+`cmake -DGVARS=OFF -DLUA=ON -DLUA_COMPILER=ON -DPCB=NV14 -SIMU_AUDIO=OFF -DSIMU_LUA_COMPILER=OFF -DUSB_SERIAL=ON -DHELI=OFF -DMULTIMODULE=ON -DALLOW_NIGHTLY_BUILDS=ON -DAUTOSWITCH=ON -DAUTOSOURCE=ON -DGUI=YES -DBOOTLOADER=NO -DCMAKE_BUILD_TYPE=Release../`
 
 best regards
 
-derdoktor667
+### _derdoktor667_
