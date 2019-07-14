@@ -52,7 +52,9 @@ if not sys.version_info >= (3, 6):
     error("* Requires Python 3.6+.")
 
 # Show a header
+print('')
 header('===========================  Nirvana NV14  ===========================')
+print('')
 header('* https://cloud.docker.com/repository/docker/derdoktor667/nv14-build *')
 
 # Specify some paths for the build
@@ -76,14 +78,14 @@ nv14_default_options = OrderedDict([
     ("GUI", "YES"),
     ("GVARS", "NO"),
     ("HELI", "NO"),
-    ("LCD_DUAL_BUFFER", "NO"),
-    ("ALLOW_NIGHTLY_BUILDS", "YES"),
+    # ("LCD_DUAL_BUFFER", "NO"),
+    # ("ALLOW_NIGHTLY_BUILDS", "YES"),
     ("LUA", "YES"),
     ("LUA_COMPILER", "YES"),
     ("SIMU_AUDIO", "NO"),
     ("SIMU_LUA_COMPILER", "NO"),
     ("USB_SERIAL", "YES"),
-    ("MODULE_R9M_FULLSIZE", "YES"),
+    # ("MODULE_R9M_FULLSIZE", "YES"),
     ("MULTIMODULE", "YES"),
     ("AUTOSWITCH", "YES"),
     ("AUTOSOURCE", "YES"),
