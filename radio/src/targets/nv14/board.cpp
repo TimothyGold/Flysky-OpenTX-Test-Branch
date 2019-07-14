@@ -40,7 +40,8 @@ void watchdogInit(unsigned int duration) {
 
 // Start TIMER7 at 2000000Hz
 void init2MhzTimer() {
-  TIMER_2MHz_TIMER->PSC = (PERI1_FREQUENCY * TIMER_MULT_APB1) / 2000000 - 1;  // 0.5 uS, 2 MHz
+  TIMER_2MHz_TIMER->PSC =
+      (PERI1_FREQUENCY * TIMER_MULT_APB1) / 2000000 - 1;  // 0.5 uS, 2 MHz
   TIMER_2MHz_TIMER->ARR = 65535;
   TIMER_2MHz_TIMER->CR2 = 0;
   TIMER_2MHz_TIMER->CR1 = TIM_CR1_CEN;
@@ -49,7 +50,8 @@ void init2MhzTimer() {
 // Starts TIMER at 1000Hz
 void init1msTimer() {
   INTERRUPT_xMS_TIMER->ARR = 999;  // 1mS in uS
-  INTERRUPT_xMS_TIMER->PSC = (PERI1_FREQUENCY * TIMER_MULT_APB1) / 1000000 - 1;  // 1uS
+  INTERRUPT_xMS_TIMER->PSC =
+      (PERI1_FREQUENCY * TIMER_MULT_APB1) / 1000000 - 1;  // 1uS
   INTERRUPT_xMS_TIMER->CCER = 0;
   INTERRUPT_xMS_TIMER->CCMR1 = 0;
   INTERRUPT_xMS_TIMER->EGR = 0;
@@ -167,8 +169,7 @@ void boardInit() {
   init1msTimer();
   uint32_t pwr_press_time = 0;
   if (UNEXPECTED_SHUTDOWN()) pwrOn();
-  backlightInit();
-  lcdInit();
+
   while (boardState == BOARD_POWER_OFF) {
     if (pwrPressed()) {
       if (pwr_press_time == 0) {
@@ -199,9 +200,11 @@ void boardInit() {
   hapticInit();
   TouchInit();
   boardState = BOARD_STARTED;
-//#if defined(BLUETOOTH)
-//  bluetoothInit(BLUETOOTH_DEFAULT_BAUDRATE);
-//#endif
+
+  //#if defined(BLUETOOTH)
+  //  bluetoothInit(BLUETOOTH_DEFAULT_BAUDRATE);
+  //#endif
+
 #if defined(DEBUG)
   DBGMCU_APB1PeriphConfig(
       DBGMCU_IWDG_STOP | DBGMCU_TIM1_STOP | DBGMCU_TIM2_STOP |
