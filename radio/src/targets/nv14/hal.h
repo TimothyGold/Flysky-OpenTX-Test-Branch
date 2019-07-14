@@ -76,6 +76,7 @@
 
 // ADC
 #define ADC_RCC_AHB1Periph              (RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOF | RCC_AHB1Periph_DMA2)
+#define ADC_RCC_APB1Periph              (RCC_APB1Periph_TIM5)
 #define ADC_RCC_APB2Periph              (RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC3)
 #define ADC_GPIO_PIN_STICK_LH           GPIO_Pin_2      // PA.02
 #define ADC_GPIO_PIN_STICK_LV           GPIO_Pin_3      // PA.03
@@ -424,22 +425,10 @@
 #define BT_TX_GPIO_PinSource GPIO_PinSource14
 #define BT_RX_GPIO_PinSource GPIO_PinSource9
 #define BT_USART_IRQHandler USART6_IRQHandler
-#if defined(PCBX12S)
-#if PCBREV >= 13
-#define BT_RCC_AHB1Periph (RCC_AHB1Periph_GPIOI | RCC_AHB1Periph_GPIOG)
-#define BT_EN_GPIO GPIOI
-#define BT_EN_GPIO_PIN GPIO_Pin_10  // PI.10
-#else
-#define BT_RCC_AHB1Periph (RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOG)
-#define BT_EN_GPIO GPIOA
-#define BT_EN_GPIO_PIN GPIO_Pin_6  // PA.06
-#endif
 #define BT_BRTS_GPIO GPIOG
 #define BT_BRTS_GPIO_PIN GPIO_Pin_10  // PG.10
 #define BT_BCTS_GPIO GPIOG
 #define BT_BCTS_GPIO_PIN GPIO_Pin_11  // PG.11
-#elif defined(PCBNV14)
 #define BT_RCC_AHB1Periph RCC_AHB1Periph_GPIOG
 #define BT_EN_GPIO GPIOG
 #define BT_EN_GPIO_PIN GPIO_Pin_10  // PG.10
-#endif

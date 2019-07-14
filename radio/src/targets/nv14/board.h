@@ -135,7 +135,7 @@ extern "C"
 
 // CPU Unique ID
 #define LEN_CPU_UID (3 * 8 + 2)
-void getCPUUniqueID(char *s);
+void getCPUUniqueID(char * s);
 
 // SD driver
 #define BLOCK_SIZE 512 /* Block Size in Bytes */
@@ -212,9 +212,6 @@ void init_crossfire(uint32_t module_index);
 void disable_crossfire(uint32_t module_index);
 void init_sbusOut(uint32_t module_index);
 void disable_sbusOut(uint32_t module_index);
-
-void init_intmodule_heartbeat();
-void check_intmodule_heartbeat();
 
 // Trainer driver
 void init_trainer_ppm(void);
@@ -326,6 +323,7 @@ enum EnumSwitchesPositions
 };
 
 #define STORAGE_NUM_SWITCHES_POSITIONS (STORAGE_NUM_SWITCHES * 3)
+#define IS_3POS(x) ((x) != SW_SF && (x) != SW_SH)
 
 enum EnumPowerupState
 {
@@ -353,7 +351,11 @@ uint32_t readTrims(void);
 extern uint32_t powerupReason;
 extern uint32_t boardState;
 
+#define BOOTLOADER_MAGIC 0xDEADBEEF
+#define SHUTDOWN_REQUEST 0xDEADBEEF
+#define NO_SHUTDOWN_REQUEST ~SHUTDOWN_REQUEST
 #define DIRTY_SHUTDOWN 0xCAFEDEAD
+#define NORMAL_POWER_OFF ~DIRTY_SHUTDOWN
 
 #define wdt_disable()
 void watchdogInit(unsigned int duration);
@@ -442,7 +444,6 @@ void adcInit(void);
 void adcRead(void);
 uint16_t getAnalogValue(uint8_t index);
 uint16_t getBatteryVoltage();  // returns current battery voltage in 10mV steps
-uint16_t getBattery2Voltage(); // returns current battery voltage in 10mV steps
 
 #define BATTERY_WARN 37 // 3.7V
 #define BATTERY_MIN 36  // 3.6V
@@ -629,4 +630,4 @@ extern Fifo<uint8_t, 32> auxSerialRxFifo;
 extern volatile uint32_t externalModulePort;
 #endif
 
-uint8_t touchPressed(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
+// uint8_t touchPressed(uint32_t x, uint32_t y, uint32_t w, uint32_t h);

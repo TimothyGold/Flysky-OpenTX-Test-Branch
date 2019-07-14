@@ -63,8 +63,7 @@ void pwrOn() {
 
 void pwrSoftReboot() { 
   boardState = BOARD_REBOOT;
-  NVIC_SystemReset();
-}
+  }
 
 void pwrOff() {
   // Shutdown the Haptic

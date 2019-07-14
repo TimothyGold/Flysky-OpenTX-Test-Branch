@@ -1,4 +1,3 @@
-#pragma once
 /*
  * Copyright (C) OpenTX
  *
@@ -23,6 +22,7 @@
 // i.e. BACKUP RAM Backup/Restore functions
 
 #include <inttypes.h>
+#include "board.h"
 #include "dataconstants.h"
 #include "definitions.h"
 

@@ -1695,5 +1695,3 @@ extern JitterMeter<uint16_t> avgJitter[NUM_ANALOGS];
 #if defined(BLUETOOTH)
 #include "bluetooth.h"
 #endif
-
-#define BOOTLOADER_MAGIC 0xDEADBEEF
